@@ -87,8 +87,8 @@ export default function HomePage() {
 }
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  silver: "/images/products/end-game-front.webp",
-  golden: "/images/products/wise-monk-front.webp",
+  silver: "/images/products/end-game-lifestyle.webp",
+  golden: "/images/products/rogue-alpha-lifestyle.webp",
 };
 
 function Hero() {

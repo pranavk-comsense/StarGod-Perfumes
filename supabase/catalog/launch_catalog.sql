@@ -95,7 +95,7 @@ delete from public.product_images
 insert into public.product_images (product_id, storage_path, alt, sort)
 select p.id, '/images/products/' || p.slug || v.suffix, p.name || v.alt, v.sort
 from public.products p
-cross join (values ('-front.webp', ' eau de parfum 100 ml, front', 0), ('-angle.webp', ' eau de parfum 100 ml, angled', 1), ('-notes.webp', ' fragrance notes: top, heart and base', 2), ('-close.webp', ' cap and label close-up', 3), ('-side.webp', ' eau de parfum 100 ml, side view', 4)) as v(suffix, alt, sort)
+cross join (values ('-front.webp', ' eau de parfum 100 ml, front', 0), ('-lifestyle.webp', ' styled with its key ingredients', 1), ('-angle.webp', ' eau de parfum 100 ml, angled', 2), ('-notes.webp', ' fragrance notes: top, heart and base', 3), ('-close.webp', ' cap and label close-up', 4), ('-side.webp', ' eau de parfum 100 ml, side view', 5)) as v(suffix, alt, sort)
 where p.slug in ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game',
                  'wise-monk','rising-shot','rogue-alpha','quick-deception','iron-will');
 
