@@ -36,7 +36,7 @@ export function OrderItems({ order, linkProducts = true }: { order: OrderDetail;
     <ul className="divide-y">
       {order.order_items.map((i) => (
         <li key={i.id} className="flex gap-4 py-4">
-          <div className="relative aspect-[4/5] w-16 shrink-0 overflow-hidden rounded bg-secondary">
+          <div className="relative aspect-square w-16 shrink-0 overflow-hidden rounded bg-secondary">
             <ProductImage path={i.image_path} alt="" sizes="64px" />
           </div>
           <div className="min-w-0 flex-1 text-sm">

@@ -21,6 +21,8 @@ export type ProductCardData = {
   ratingAvg: number;
   ratingCount: number;
   image: string | null;
+  /** second image, shown on hover (e.g. packshot behind the mood shot) */
+  hoverImage: string | null;
   price: number; // lowest active variant price, paise
   mrp: number; // mrp of that variant
   sizes: string[];
@@ -61,7 +63,9 @@ function toCard(row: CardRow): ProductCardData | null {
   const variants = row.product_variants.filter((v) => v.is_active).sort((a, b) => a.sort - b.sort);
   if (variants.length === 0) return null;
   const cheapest = variants.reduce((min, v) => (v.price < min.price ? v : min), variants[0]);
-  const image = [...row.product_images].sort((a, b) => a.sort - b.sort)[0]?.storage_path ?? null;
+  const sortedImages = [...row.product_images].sort((a, b) => a.sort - b.sort);
+  const image = sortedImages[0]?.storage_path ?? null;
+  const hoverImage = sortedImages[1]?.storage_path ?? null;
   return {
     id: row.id,
     slug: row.slug,
@@ -73,6 +77,7 @@ function toCard(row: CardRow): ProductCardData | null {
     ratingAvg: Number(row.rating_avg),
     ratingCount: row.rating_count,
     image,
+    hoverImage,
     price: cheapest.price,
     mrp: cheapest.mrp,
     sizes: variants.map((v) => v.label),

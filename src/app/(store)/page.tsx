@@ -33,7 +33,6 @@ export default function HomePage() {
                 src={CATEGORY_IMAGES[c.slug]}
                 alt=""
                 fill
-                unoptimized
                 sizes="(min-width: 1024px) 20vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -91,11 +90,11 @@ export default function HomePage() {
 }
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  men: "/images/products/honest-liar.svg",
-  women: "/images/products/quick-storm.svg",
-  unisex: "/images/products/rogue-alpha.svg",
-  silver: "/images/products/potion-trail.svg",
-  golden: "/images/products/quick-deception.svg",
+  men: "/images/products/honest-liar-mood.webp",
+  women: "/images/products/quick-storm-mood.webp",
+  unisex: "/images/products/rogue-alpha-mood.webp",
+  silver: "/images/products/end-game-mood.webp",
+  golden: "/images/products/wise-monk-mood.webp",
 };
 
 function Hero() {
@@ -146,15 +145,17 @@ function Hero() {
         </div>
 
         <div className="relative mx-auto w-full max-w-[560px]">
-          <Image
-            src="/brand/hero-bottles.svg"
-            alt="StarGod eau de parfum bottles on a glowing pedestal"
-            width={800}
-            height={760}
-            priority
-            unoptimized
-            className="h-auto w-full motion-safe:animate-[float_7s_ease-in-out_infinite] drop-shadow-[0_30px_40px_rgba(40,8,48,0.45)]"
-          />
+          <div className="relative motion-safe:animate-[float_7s_ease-in-out_infinite]">
+            <Image src="/brand/hero-stage.svg" alt="" width={800} height={760} priority unoptimized className="h-auto w-full" />
+            <Image
+              src="/brand/hero-bottles-real.png"
+              alt="StarGod Quick Storm, Rogue Alpha and Iron Will eau de parfum bottles"
+              width={800}
+              height={760}
+              priority
+              className="absolute inset-0 h-auto w-full drop-shadow-[0_24px_30px_rgba(40,8,48,0.45)]"
+            />
+          </div>
           <div className="absolute right-2 top-[12%] hidden size-24 flex-col sm:flex items-center justify-center rounded-full bg-white text-primary shadow-2xl ring-8 ring-white/20 sm:size-28">
             <span className="font-heading text-4xl leading-none sm:text-5xl">24</span>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Hours</span>
@@ -253,7 +254,7 @@ function BrandStory() {
     <section className="mt-24 bg-primary text-primary-foreground">
       <div className="container-page grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
         <div className="relative aspect-[5/4] overflow-hidden rounded-md">
-          <Image src="/images/products/wise-monk.svg" alt="Wise Monk eau de parfum" fill unoptimized className="object-cover" />
+          <Image src="/images/products/wise-monk-mood.webp" alt="Wise Monk eau de parfum" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
         </div>
         <div className="max-w-lg">
           <p className="eyebrow text-lilac">Our craft</p>
@@ -273,8 +274,8 @@ function BrandStory() {
 
 function OfferBanner() {
   const tiers = [
-    { slug: "silver", name: "Silver Collection", price: "₹1,455", mrp: "₹3,333", image: "/images/products/end-game.svg", tone: "from-zinc-200 to-zinc-50" },
-    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/iron-will.svg", tone: "from-amber-200 to-amber-50" },
+    { slug: "silver", name: "Silver Collection", price: "₹1,455", mrp: "₹3,333", image: "/images/products/potion-trail-pack.webp", tone: "from-zinc-200 to-zinc-50" },
+    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/iron-will-pack.webp", tone: "from-amber-200 to-amber-50" },
   ];
   return (
     <section id="offer" className="container-page mt-20 scroll-mt-28">
@@ -295,7 +296,7 @@ function OfferBanner() {
               <span className={cn(buttonVariants({ size: "sm" }), "mt-5 w-fit")}>Shop {t.slug}</span>
             </div>
             <div className="relative min-h-56">
-              <Image src={t.image} alt="" fill unoptimized className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src={t.image} alt="" fill sizes="(min-width: 768px) 20vw, 40vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
           </Link>
         ))}

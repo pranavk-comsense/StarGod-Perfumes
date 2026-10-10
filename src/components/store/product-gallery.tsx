@@ -11,7 +11,7 @@ export function ProductGallery({ images, name }: { images: { path: string; alt: 
 
   return (
     <div className={cn("grid gap-3 lg:gap-4", list.length > 1 && "lg:grid-cols-[72px_1fr]")}>
-      <div className="relative order-1 aspect-[4/5] overflow-hidden rounded-md bg-secondary lg:order-2">
+      <div className="relative order-1 aspect-square overflow-hidden rounded-md bg-secondary lg:order-2">
         <ProductImage path={current.path} alt={current.alt ?? name} priority sizes="(min-width: 1024px) 45vw, 100vw" />
       </div>
       {list.length > 1 && (
@@ -23,7 +23,7 @@ export function ProductGallery({ images, name }: { images: { path: string; alt: 
               onClick={() => setActive(i)}
               aria-label={`Show image ${i + 1}`}
               aria-current={i === active}
-              className={cn("relative aspect-[4/5] w-16 shrink-0 overflow-hidden rounded border-2 lg:w-full", i === active ? "border-primary" : "border-transparent opacity-70 hover:opacity-100")}
+              className={cn("relative aspect-square w-16 shrink-0 overflow-hidden rounded border-2 lg:w-full", i === active ? "border-primary" : "border-transparent opacity-70 hover:opacity-100")}
             >
               <ProductImage path={img.path} alt="" sizes="72px" />
             </button>

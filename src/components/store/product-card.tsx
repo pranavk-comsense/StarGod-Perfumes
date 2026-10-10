@@ -16,13 +16,20 @@ const CONCENTRATION_LABEL: Record<ProductCardData["concentration"], string> = {
 export function ProductCard({ product, priority = false }: { product: ProductCardData; priority?: boolean }) {
   return (
     <Link href={`/products/${product.slug}`} className="group flex flex-col">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-md bg-secondary">
+      <div className="relative aspect-square overflow-hidden rounded-md bg-secondary">
         <ProductImage
           path={product.image}
           alt={product.name}
           priority={priority}
           className="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
+        {product.hoverImage && (
+          <ProductImage
+            path={product.hoverImage}
+            alt=""
+            className="opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+        )}
         {!product.inStock && (
           <span className="absolute left-2 top-2 rounded-sm bg-background/90 px-2 py-1 text-[10px] font-medium uppercase tracking-wider">
             Sold out

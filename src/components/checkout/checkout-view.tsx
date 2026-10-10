@@ -148,7 +148,7 @@ export function CheckoutView({
         <ul className="mt-4 grid gap-4">
           {(quote?.lines ?? []).map((l) => (
             <li key={l.variant_id} className="flex gap-3 text-sm">
-              <div className="relative aspect-[4/5] w-14 shrink-0 overflow-hidden rounded bg-secondary">
+              <div className="relative aspect-square w-14 shrink-0 overflow-hidden rounded bg-secondary">
                 <ProductImage path={l.image_path} alt="" sizes="56px" />
                 <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">{l.qty}</span>
               </div>

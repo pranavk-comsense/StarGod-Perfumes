@@ -116,7 +116,7 @@ export function CartView() {
               ))
             : lines.map((l) => (
                 <li key={l.variant_id} className="flex gap-4 py-5">
-                  <Link href={l.product_slug ? `/products/${l.product_slug}` : "#"} className="relative aspect-[4/5] w-20 shrink-0 overflow-hidden rounded bg-secondary sm:w-24">
+                  <Link href={l.product_slug ? `/products/${l.product_slug}` : "#"} className="relative aspect-square w-20 shrink-0 overflow-hidden rounded bg-secondary sm:w-24">
                     <ProductImage path={l.image_path} alt={l.product_name ?? "Product"} sizes="96px" />
                   </Link>
                   <div className="flex min-w-0 flex-1 flex-col">
