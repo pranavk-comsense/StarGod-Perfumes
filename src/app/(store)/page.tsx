@@ -19,18 +19,18 @@ export default function HomePage() {
 
       <section className="container-page mt-20" aria-labelledby="cat-heading">
         <SectionHeading eyebrow="Find your scent" title="Shop by collection" id="cat-heading" />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2">
           {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/shop?category=${c.slug}`}
-              className="group relative flex aspect-square flex-col justify-end overflow-hidden rounded-md p-5 sm:p-6 lg:aspect-[5/4]"
+              className="group relative flex aspect-square flex-col justify-end overflow-hidden rounded-md p-5 sm:p-6"
             >
               <Image
                 src={CATEGORY_IMAGES[c.slug]}
                 alt=""
                 fill
-                sizes="(min-width: 640px) 50vw, 100vw"
+                sizes="(min-width: 1024px) 440px, (min-width: 640px) 50vw, 100vw"
                 className="object-cover object-[center_35%] transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
