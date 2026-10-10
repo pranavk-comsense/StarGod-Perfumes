@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { BanknoteIcon, RotateCcwIcon, TruckIcon } from "lucide-react";
 import { getProductBySlug } from "@/lib/catalog/queries";
+import { noteImageUrl } from "@/lib/catalog/notes";
 import { formatDate } from "@/lib/orders/format";
 import { RatingStars } from "@/components/store/rating-stars";
 import { CONCENTRATION_LABEL } from "@/components/store/product-card";
@@ -102,20 +104,10 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[slug]">, "p
               <p className="mt-3 leading-relaxed text-muted-foreground">{product.description}</p>
             </section>
           )}
-
-          <section className="mt-8">
-            <h2 className="eyebrow font-sans text-foreground">Fragrance notes</h2>
-            <dl className="mt-4 grid grid-cols-3 gap-3 text-center">
-              {(["top", "heart", "base"] as const).map((tier) => (
-                <div key={tier} className="rounded-md border bg-card p-4">
-                  <dt className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{tier} notes</dt>
-                  <dd className="mt-2 font-heading text-lg leading-snug">{product.notes[tier].join(", ") || "—"}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
         </div>
       </div>
+
+      <NotesSection notes={product.notes} />
 
       <ProductJsonLd product={product} />
       <section id="reviews" className="mt-20 scroll-mt-28">
@@ -150,6 +142,49 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[slug]">, "p
         )}
       </section>
     </div>
+  );
+}
+
+const TIERS = [
+  { key: "top", label: "Top notes", hint: "The opening · first 15 minutes" },
+  { key: "heart", label: "Heart notes", hint: "The character · 1 to 4 hours" },
+  { key: "base", label: "Base notes", hint: "The drydown · lingers all day" },
+] as const;
+
+function NotesSection({ notes }: { notes: ProductDetail["notes"] }) {
+  if (!TIERS.some((t) => notes[t.key].length)) return null;
+  return (
+    <section aria-labelledby="notes-heading" className="mt-16 rounded-2xl bg-accent/70 px-5 py-10 sm:px-10 lg:mt-20">
+      <p className="eyebrow text-center">The composition</p>
+      <h2 id="notes-heading" className="mt-2 text-center text-3xl sm:text-4xl">
+        Fragrance notes
+      </h2>
+      <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-primary/15">
+        {TIERS.filter((t) => notes[t.key].length).map((t) => (
+          <div key={t.key} className="text-center md:px-6">
+            <h3 className="font-sans text-xs font-semibold uppercase tracking-[0.25em] text-primary-deep">{t.label}</h3>
+            <p className="mt-1 text-xs text-muted-foreground">{t.hint}</p>
+            <ul className="mt-6 flex flex-wrap justify-center gap-x-3 gap-y-5 sm:gap-x-5 sm:gap-y-6">
+              {notes[t.key].map((name) => {
+                const src = noteImageUrl(name);
+                return (
+                  <li key={name} className="w-20 sm:w-24">
+                    <div className="mx-auto grid size-20 place-items-center sm:size-24 rounded-full bg-gradient-to-b from-primary/10 to-primary/25 shadow-sm ring-1 ring-primary/15">
+                      {src ? (
+                        <Image src={src} alt="" width={80} height={80} className="size-[3.75rem] object-contain sm:size-[4.5rem] drop-shadow-md" />
+                      ) : (
+                        <span className="font-heading text-2xl text-primary">{name[0]}</span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm font-medium leading-tight">{name}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
