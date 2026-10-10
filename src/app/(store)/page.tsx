@@ -90,11 +90,11 @@ export default function HomePage() {
 }
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  men: "/images/products/honest-liar-mood.webp",
-  women: "/images/products/quick-storm-mood.webp",
-  unisex: "/images/products/rogue-alpha-mood.webp",
-  silver: "/images/products/end-game-mood.webp",
-  golden: "/images/products/wise-monk-mood.webp",
+  men: "/images/products/honest-liar-front.webp",
+  women: "/images/products/quick-storm-front.webp",
+  unisex: "/images/products/rogue-alpha-front.webp",
+  silver: "/images/products/end-game-front.webp",
+  golden: "/images/products/wise-monk-front.webp",
 };
 
 function Hero() {
@@ -254,7 +254,7 @@ function BrandStory() {
     <section className="mt-24 bg-primary text-primary-foreground">
       <div className="container-page grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
         <div className="relative aspect-[5/4] overflow-hidden rounded-md">
-          <Image src="/images/products/wise-monk-mood.webp" alt="Wise Monk eau de parfum" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+          <Image src="/images/products/wise-monk-front.webp" alt="Wise Monk eau de parfum" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
         </div>
         <div className="max-w-lg">
           <p className="eyebrow text-lilac">Our craft</p>
@@ -274,8 +274,8 @@ function BrandStory() {
 
 function OfferBanner() {
   const tiers = [
-    { slug: "silver", name: "Silver Collection", price: "₹1,455", mrp: "₹3,333", image: "/images/products/potion-trail-pack.webp", tone: "from-zinc-200 to-zinc-50" },
-    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/iron-will-pack.webp", tone: "from-amber-200 to-amber-50" },
+    { slug: "silver", name: "Silver Collection", price: "₹1,455", mrp: "₹3,333", image: "/images/products/potion-trail-angle.webp", tone: "from-zinc-200 to-zinc-50" },
+    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/iron-will-angle.webp", tone: "from-amber-200 to-amber-50" },
   ];
   return (
     <section id="offer" className="container-page mt-20 scroll-mt-28">

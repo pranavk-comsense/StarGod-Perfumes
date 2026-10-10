@@ -85,7 +85,7 @@ from (values
 join public.products p on p.slug = v.slug
 on conflict (sku) do update set price = excluded.price, mrp = excluded.mrp, label = excluded.label, size_ml = excluded.size_ml;
 
--- Images: mood scene (main) + packshot (second, shown on hover), served from /public.
+-- Images: front render (main) + angled render (second, shown on hover), served from /public.
 -- Replace with uploaded photos any time via Admin -> Products -> Images.
 delete from public.product_images
  where product_id in (select id from public.products where slug in
@@ -95,7 +95,7 @@ delete from public.product_images
 insert into public.product_images (product_id, storage_path, alt, sort)
 select p.id, '/images/products/' || p.slug || v.suffix, p.name || v.alt, v.sort
 from public.products p
-cross join (values ('-mood.webp', ' eau de parfum 100 ml', 0), ('-pack.webp', ' 100 ml bottle', 1)) as v(suffix, alt, sort)
+cross join (values ('-front.webp', ' eau de parfum 100 ml, front', 0), ('-angle.webp', ' eau de parfum 100 ml, angled', 1)) as v(suffix, alt, sort)
 where p.slug in ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game',
                  'wise-monk','rising-shot','rogue-alpha','quick-deception','iron-will');
 
