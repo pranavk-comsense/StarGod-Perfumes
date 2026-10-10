@@ -16,7 +16,6 @@ export type ProductFormData = {
   slug: string;
   tagline: string | null;
   description: string | null;
-  gender: string;
   concentration: string;
   is_gift_set: boolean;
   is_featured: boolean;
@@ -57,14 +56,6 @@ export function ProductForm({ product, collections }: { product?: ProductFormDat
       <div className="grid gap-1.5 sm:col-span-2">
         <Label htmlFor="f-description">Description</Label>
         <textarea id="f-description" name="description" rows={5} maxLength={4000} defaultValue={val("description", product?.description ?? "")} className="rounded-lg border border-input bg-card px-3 py-2 text-sm" />
-      </div>
-      <div className="grid gap-1.5">
-        <Label htmlFor="f-gender">For</Label>
-        <select id="f-gender" name="gender" defaultValue={val("gender", product?.gender ?? "unisex")} className={selectCls}>
-          <option value="men">Men</option>
-          <option value="women">Women</option>
-          <option value="unisex">Unisex</option>
-        </select>
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="f-concentration">Concentration</Label>

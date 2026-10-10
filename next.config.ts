@@ -73,11 +73,11 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   async redirects() {
-    return ["men", "women", "unisex", "silver", "golden"].map((c) => ({
-      source: `/${c}`,
-      destination: `/shop?category=${c}`,
-      permanent: true,
-    }));
+    return [
+      ...["silver", "golden"].map((c) => ({ source: `/${c}`, destination: `/shop?category=${c}`, permanent: true })),
+      // Gender pages were retired: every perfume is unisex.
+      ...["men", "women", "unisex"].map((c) => ({ source: `/${c}`, destination: "/shop", permanent: true })),
+    ];
   },
 };
 

@@ -42,8 +42,6 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[slug]">, "p
   const product = await getProductBySlug((await params).slug);
   if (!product) notFound();
 
-  const category = product.gender;
-
   return (
     <div className="container-page py-8 lg:py-12">
       <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
@@ -51,8 +49,8 @@ async function ProductContent({ params }: Pick<PageProps<"/products/[slug]">, "p
           Home
         </Link>{" "}
         /{" "}
-        <Link href={`/shop?category=${category}`} className="capitalize hover:text-foreground">
-          {category.replace("-", " ")}
+        <Link href={product.offer ? `/shop?category=${product.offer.slug}` : "/shop"} className="hover:text-foreground">
+          {product.offer?.collection ?? "Shop"}
         </Link>{" "}
         / <span className="text-foreground">{product.name}</span>
       </nav>

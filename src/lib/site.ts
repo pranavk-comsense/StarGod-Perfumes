@@ -21,9 +21,6 @@ export const site = {
 };
 
 export const categories = [
-  { slug: "men", label: "Men", blurb: "Bold, spicy & woody" },
-  { slug: "women", label: "Women", blurb: "Fruity, floral & sweet" },
-  { slug: "unisex", label: "Unisex", blurb: "Made to be shared" },
   { slug: "silver", label: "Silver", blurb: "₹1,455 · Buy 1 Get 1" },
   { slug: "golden", label: "Golden", blurb: "₹1,855 · Buy 1 Get 1" },
 ] as const;
@@ -31,8 +28,8 @@ export const categories = [
 /** Collections that run a Buy 1 Get 1 offer (mirrors collections.bogo). */
 export const offerCollections = ["silver", "golden"] as const;
 
-/** The header / mobile menu shows only the two collections. */
-export const navCategories = categories.filter((c) => c.slug === "silver" || c.slug === "golden");
+/** Header / mobile menu items. */
+export const navCategories = categories;
 
 export type CategorySlug = (typeof categories)[number]["slug"];
 
@@ -41,9 +38,6 @@ export const fragranceFamilies = ["Woody", "Floral", "Fruity", "Citrus", "Gourma
 export const footerLinks = {
   Shop: [
     { href: "/shop", label: "All fragrances" },
-    { href: "/shop?category=men", label: "Men" },
-    { href: "/shop?category=women", label: "Women" },
-    { href: "/shop?category=unisex", label: "Unisex" },
     { href: "/shop?category=silver", label: "Silver collection" },
     { href: "/shop?category=golden", label: "Golden collection" },
   ],

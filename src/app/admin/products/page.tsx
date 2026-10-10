@@ -53,7 +53,7 @@ export default async function AdminProductsPage() {
                     </Link>
                   </td>
                   <td className="px-5 py-3 capitalize">
-                    {p.gender} · {p.concentration.toUpperCase()}
+                    {p.concentration.toUpperCase()}
                   </td>
                   <td className="px-5 py-3">{prices.length ? `${formatINR(Math.min(...prices))}${prices.length > 1 ? ` – ${formatINR(Math.max(...prices))}` : ""}` : "—"}</td>
                   <td className={stock === 0 ? "px-5 py-3 font-medium text-destructive" : "px-5 py-3"}>{stock}</td>

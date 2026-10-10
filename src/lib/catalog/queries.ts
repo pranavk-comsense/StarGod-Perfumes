@@ -105,7 +105,6 @@ async function fetchAllCards(): Promise<ListItem[]> {
       row.name,
       row.tagline,
       row.description,
-      row.gender,
       row.concentration === "attar" ? "attar" : "perfume",
       ...row.product_notes.flatMap((n) => (n.notes ? [n.notes.name, n.notes.family] : [])),
     ]
@@ -151,8 +150,7 @@ export async function getProducts(filters: ShopFilters = {}): Promise<ProductCar
   let items = await fetchAllCards();
   const { category, family, sort = "featured", q, price } = filters;
 
-  if (category === "silver" || category === "golden") items = items.filter((p) => p.collections.includes(category));
-  else if (category) items = items.filter((p) => p.gender === category && !p.isGiftSet);
+  if (category) items = items.filter((p) => p.collections.includes(category));
 
   if (family) items = items.filter((p) => p.families.some((f) => f.toLowerCase() === family.toLowerCase()));
   if (price) {

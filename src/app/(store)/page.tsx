@@ -18,28 +18,25 @@ export default function HomePage() {
       <TrustStrip />
 
       <section className="container-page mt-20" aria-labelledby="cat-heading">
-        <SectionHeading eyebrow="Find your scent" title="Shop by category" id="cat-heading" />
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {categories.map((c, i) => (
+        <SectionHeading eyebrow="Find your scent" title="Shop by collection" id="cat-heading" />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/shop?category=${c.slug}`}
-              className={cn(
-                "group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-md p-4",
-                i === 4 && "col-span-2 aspect-[8/5] sm:col-span-1 sm:aspect-[4/5]",
-              )}
+              className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-md p-5 sm:p-6"
             >
               <Image
                 src={CATEGORY_IMAGES[c.slug]}
                 alt=""
                 fill
-                sizes="(min-width: 1024px) 20vw, 50vw"
+                sizes="(min-width: 640px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <div className="relative text-white">
-                <p className="font-heading text-2xl">{c.label}</p>
-                <p className="text-xs text-white/80">{c.blurb}</p>
+                <p className="font-heading text-3xl">{c.label} Collection</p>
+                <p className="text-sm text-white/80">{c.blurb}</p>
               </div>
             </Link>
           ))}
@@ -90,9 +87,6 @@ export default function HomePage() {
 }
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  men: "/images/products/honest-liar-front.webp",
-  women: "/images/products/quick-storm-front.webp",
-  unisex: "/images/products/rogue-alpha-front.webp",
   silver: "/images/products/end-game-front.webp",
   golden: "/images/products/wise-monk-front.webp",
 };

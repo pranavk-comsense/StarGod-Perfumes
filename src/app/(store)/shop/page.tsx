@@ -10,7 +10,7 @@ import { SortSelect } from "@/components/store/sort-select";
 
 export const metadata: Metadata = {
   title: "Shop perfumes",
-  description: "Shop long-lasting 100 ml perfumes for men and women. Buy 1 Get 1 free on Silver & Golden collections."
+  description: "Shop long-lasting 100 ml unisex perfumes. Buy 1 Get 1 free on Silver & Golden collections."
 };
 
 const SORTS: { value: ShopSort; label: string }[] = [
@@ -71,7 +71,7 @@ async function ShopContent({ searchParams }: Pick<PageProps<"/shop">, "searchPar
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl sm:text-5xl">
-            {params.q ? `Results for “${params.q}”` : category ? (category.slug === "silver" || category.slug === "golden" ? `${category.label} Collection` : `${category.label} fragrances`) : "All fragrances"}
+            {params.q ? `Results for “${params.q}”` : category ? `${category.label} Collection` : "All fragrances"}
             {family && <span className="text-muted-foreground"> · {family}</span>}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">

@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: { default: `${site.name}: ${site.tagline}`, template: `%s | ${site.name}` },
-  description: "24 hour long lasting 100 ml eau de parfums for men and women. Buy 1 Get 1 free on Silver & Golden collections, free shipping and COD across India.",
+  description: "24 hour long lasting 100 ml unisex eau de parfums. Buy 1 Get 1 free on Silver & Golden collections, free shipping and COD across India.",
   openGraph: { siteName: site.name, locale: "en_IN", type: "website", images: [{ url: "/brand/og-square.png", width: 1200, height: 1200 }] },
 };
 
