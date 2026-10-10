@@ -72,7 +72,6 @@ export function OrderTotals({ order }: { order: OrderDetail }) {
         <dt>Total</dt>
         <dd>{formatINR(order.total)}</dd>
       </div>
-      <Row label="GST included" value={formatINR(order.gst_amount)} />
       <Row label="Payment" value={`${order.payment_method === "cod" ? "Cash on Delivery" : "Online"} · ${PAYMENT_STATUS_LABEL[order.payment_status]}`} />
       {refunded > 0 && <Row label="Refunded" value={formatINR(refunded)} />}
     </dl>

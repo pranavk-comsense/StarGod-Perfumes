@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { categories } from "@/lib/site";
+import { navCategories } from "@/lib/site";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -19,10 +19,7 @@ export function MobileNav() {
           <SheetTitle className="font-brand text-2xl font-extrabold text-primary">StarGod</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col px-4 pb-6" aria-label="Mobile">
-          <Link href="/shop" onClick={close} className="border-b py-3.5 text-sm uppercase tracking-[0.15em]">
-            Shop all
-          </Link>
-          {categories.map((c) => (
+          {navCategories.map((c) => (
             <Link key={c.slug} href={`/shop?category=${c.slug}`} onClick={close} className="border-b py-3.5">
               <span className="block text-sm uppercase tracking-[0.15em]">{c.label}</span>
               <span className="text-xs text-muted-foreground">{c.blurb}</span>

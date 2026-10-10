@@ -5,7 +5,7 @@ import { SearchDialog } from "@/components/layout/search-dialog";
 import { Logo } from "@/components/brand/logo";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { AccountMenu, AccountMenuFallback } from "@/components/layout/account-menu";
-import { categories, site } from "@/lib/site";
+import { navCategories, site } from "@/lib/site";
 
 export function SiteHeader() {
   return (
@@ -15,10 +15,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-1">
           <MobileNav />
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-            <Link href="/shop" className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:text-lilac">
-              Shop
-            </Link>
-            {categories.map((c) => (
+            {navCategories.map((c) => (
               <Link key={c.slug} href={`/shop?category=${c.slug}`} className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:text-lilac">
                 {c.label}
               </Link>

@@ -20,7 +20,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
     admin
       .from("products")
       .select(
-        `id, name, slug, tagline, description, gender, concentration, hsn_code, gst_rate, is_gift_set, is_featured, is_active,
+        `id, name, slug, tagline, description, gender, concentration, is_gift_set, is_featured, is_active,
          product_collections(collection_id), product_notes(tier, notes(name)),
          product_variants(id, sku, label, size_ml, price, mrp, stock, weight_g, sort, is_active),
          product_images(id, storage_path, alt, sort)`,
@@ -79,8 +79,6 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
               description: p.description,
               gender: p.gender,
               concentration: p.concentration,
-              hsn_code: p.hsn_code,
-              gst_rate: Number(p.gst_rate),
               is_gift_set: p.is_gift_set,
               is_featured: p.is_featured,
               is_active: p.is_active,

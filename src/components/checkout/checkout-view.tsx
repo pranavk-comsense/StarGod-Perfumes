@@ -174,7 +174,6 @@ export function CheckoutView({
               {quote ? formatINR(quote.total) : "—"}
             </dd>
           </div>
-          {quote && <p className="text-xs text-muted-foreground">Includes GST of {formatINR(quote.gst_amount)}</p>}
         </dl>
         {coupon && quote?.coupon_error && <p className="mt-3 text-xs text-destructive">Coupon {coupon}: {quote.coupon_error}</p>}
 

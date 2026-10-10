@@ -31,6 +31,9 @@ export const categories = [
 /** Collections that run a Buy 1 Get 1 offer (mirrors collections.bogo). */
 export const offerCollections = ["silver", "golden"] as const;
 
+/** The header / mobile menu shows only the two collections. */
+export const navCategories = categories.filter((c) => c.slug === "silver" || c.slug === "golden");
+
 export type CategorySlug = (typeof categories)[number]["slug"];
 
 export const fragranceFamilies = ["Woody", "Floral", "Fruity", "Citrus", "Gourmand", "Spicy", "Oriental", "Leather", "Aquatic"] as const;

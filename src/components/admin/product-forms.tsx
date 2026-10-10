@@ -18,8 +18,6 @@ export type ProductFormData = {
   description: string | null;
   gender: string;
   concentration: string;
-  hsn_code: string;
-  gst_rate: number;
   is_gift_set: boolean;
   is_featured: boolean;
   is_active: boolean;
@@ -82,10 +80,6 @@ export function ProductForm({ product, collections }: { product?: ProductFormDat
       <Field name="notesTop" label="Top notes (comma-separated)" defaultValue={val("notesTop", product?.notes.top.join(", ") ?? "")} />
       <Field name="notesHeart" label="Heart notes" defaultValue={val("notesHeart", product?.notes.heart.join(", ") ?? "")} />
       <Field name="notesBase" label="Base notes" defaultValue={val("notesBase", product?.notes.base.join(", ") ?? "")} />
-      <div className="grid grid-cols-2 gap-4">
-        <Field name="hsnCode" label="HSN code" defaultValue={val("hsnCode", product?.hsn_code ?? "33030090")} errors={e.hsnCode} />
-        <Field name="gstRate" label="GST %" type="number" step="0.01" defaultValue={val("gstRate", String(product?.gst_rate ?? 18))} errors={e.gstRate} />
-      </div>
       <fieldset className="grid gap-2 sm:col-span-2">
         <legend className="mb-1 text-sm font-medium">Collections</legend>
         <div className="flex flex-wrap gap-4">

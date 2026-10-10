@@ -9,14 +9,10 @@ import { formatINR } from "@/lib/money";
 import { PrintButton } from "@/components/orders/print-button";
 import { getSettings } from "@/lib/settings";
 
-export const metadata: Metadata = { title: "Tax invoice", robots: { index: false } };
+export const metadata: Metadata = { title: "Invoice", robots: { index: false } };
 export const instant = false;
 
-
-/**
- * GST tax invoice (prices are GST-inclusive). Intra-state supply → CGST + SGST;
- * inter-state → IGST. Print / "Save as PDF" from the browser.
- */
+/** Order invoice. Print / "Save as PDF" from the browser. */
 export default async function InvoicePage({ params }: PageProps<"/invoice/[number]">) {
   const { number } = await params;
   const user = await requireUser(`/invoice/${number}`);
@@ -27,16 +23,6 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
 
   const store = (await getSettings()).store;
   const addr = order.shipping_address as unknown as ShippingAddress;
-  const intraState = !!store.state && addr.state === store.state;
-  const discountRatio = order.subtotal > 0 ? (order.subtotal - order.offer_discount - order.discount) / order.subtotal : 1;
-
-  const lines = order.order_items.map((i) => {
-    const gross = Math.round(i.line_total * discountRatio);
-    const rate = Number(i.gst_rate);
-    const taxable = Math.round((gross * 100) / (100 + rate));
-    return { ...i, gross, rate, taxable, tax: gross - taxable };
-  });
-  const totals = lines.reduce((t, l) => ({ taxable: t.taxable + l.taxable, tax: t.tax + l.tax }), { taxable: 0, tax: 0 });
 
   return (
     <main className="mx-auto w-full max-w-3xl bg-white p-6 text-[13px] text-black sm:p-10 print:p-0">
@@ -49,10 +35,9 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold">Premium Perfumes</p>
           <p className="mt-3">{store.legal_name ?? store.name}</p>
           <p className="max-w-xs text-neutral-600">{store.address ?? "[Registered address: add in Admin → Settings]"}</p>
-          <p>GSTIN: {store.gstin ?? "[add in Admin → Settings]"}</p>
         </div>
         <div className="text-right">
-          <h1 className="font-sans text-lg font-semibold">TAX INVOICE</h1>
+          <h1 className="font-sans text-lg font-semibold">INVOICE</h1>
           <p>Invoice no: INV-{order.order_number.replace(/^SG-/, "")}</p>
           <p>Order no: {order.order_number}</p>
           <p>Date: {formatDate(order.paid_at ?? order.created_at)}</p>
@@ -72,52 +57,35 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
             {addr.city}, {addr.state} {addr.pincode}
           </p>
         </div>
-        <div className="sm:text-right">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-neutral-500">Place of supply</p>
-          <p>{addr.state}</p>
-        </div>
       </section>
 
       <table className="mt-6 w-full border-collapse">
         <thead>
           <tr className="border-b text-left text-[11px] uppercase tracking-wider text-neutral-500">
             <th className="py-2 pr-2 font-medium">Item</th>
-            <th className="py-2 pr-2 font-medium">HSN</th>
             <th className="py-2 pr-2 text-right font-medium">Qty</th>
-            <th className="py-2 pr-2 text-right font-medium">Taxable</th>
-            <th className="py-2 pr-2 text-right font-medium">{intraState ? "CGST + SGST" : "IGST"}</th>
-            <th className="py-2 text-right font-medium">Total</th>
+            <th className="py-2 pr-2 text-right font-medium">Price</th>
+            <th className="py-2 text-right font-medium">Amount</th>
           </tr>
         </thead>
         <tbody>
-          {lines.map((l) => (
+          {order.order_items.map((l) => (
             <tr key={l.id} className="border-b align-top">
               <td className="py-2 pr-2">
                 {l.product_name} ({l.variant_label})<span className="block text-[11px] text-neutral-500">SKU {l.sku}</span>
               </td>
-              <td className="py-2 pr-2">33030090</td>
               <td className="py-2 pr-2 text-right">{l.qty}</td>
-              <td className="py-2 pr-2 text-right">{formatINR(l.taxable)}</td>
-              <td className="py-2 pr-2 text-right">
-                {intraState ? `${l.rate / 2}% + ${l.rate / 2}%` : `${l.rate}%`}
-                <span className="block">{formatINR(l.tax)}</span>
-              </td>
-              <td className="py-2 text-right">{formatINR(l.gross)}</td>
+              <td className="py-2 pr-2 text-right">{formatINR(l.unit_price)}</td>
+              <td className="py-2 text-right">{formatINR(l.line_total)}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       <dl className="ml-auto mt-6 grid max-w-xs gap-1.5">
-        <Row label="Taxable value" value={formatINR(totals.taxable)} />
-        {intraState ? (
-          <>
-            <Row label="CGST" value={formatINR(Math.floor(totals.tax / 2))} />
-            <Row label="SGST" value={formatINR(totals.tax - Math.floor(totals.tax / 2))} />
-          </>
-        ) : (
-          <Row label="IGST" value={formatINR(totals.tax)} />
-        )}
+        <Row label="Subtotal" value={formatINR(order.subtotal)} />
+        {order.offer_discount > 0 && <Row label="Buy 1 Get 1 offer" value={`−${formatINR(order.offer_discount)}`} />}
+        {order.discount > 0 && <Row label={order.coupon_code ? `Coupon (${order.coupon_code})` : "Discount"} value={`−${formatINR(order.discount)}`} />}
         {order.shipping_fee > 0 && <Row label="Shipping" value={formatINR(order.shipping_fee)} />}
         {order.cod_fee > 0 && <Row label="COD fee" value={formatINR(order.cod_fee)} />}
         <div className="mt-1 flex justify-between border-t pt-2 text-base font-semibold">
@@ -127,7 +95,7 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
       </dl>
 
       <footer className="mt-10 border-t pt-4 text-[11px] text-neutral-500">
-        <p>Prices are inclusive of GST. Item amounts are shown after offers and coupon discounts. This is a computer-generated invoice and does not require a signature.</p>
+        <p>This is a computer-generated invoice and does not require a signature.</p>
         <p className="mt-1">Questions: {store.support_email}</p>
       </footer>
     </main>

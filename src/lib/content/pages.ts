@@ -2,7 +2,7 @@ import { site } from "@/lib/site";
 
 /**
  * Info & legal pages. DRAFT copy: have it reviewed (and fill in the registered
- * business name, address and GSTIN) before going live. Cashfree reviews these
+ * business name and address) before going live. Cashfree reviews these
  * pages during merchant onboarding.
  */
 export type InfoPage = { title: string; description: string; updated?: string; sections: { heading?: string; body: string[] }[] };
@@ -84,7 +84,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
     description: "The terms that apply when you use our website and buy from us.",
     updated: "October 2026",
     sections: [
-      { heading: "Orders", body: ["All orders are subject to availability and confirmation. Prices are in Indian Rupees and include GST. We may cancel orders in case of pricing errors or suspected fraud, with a full refund."] },
+      { heading: "Orders", body: ["All orders are subject to availability and confirmation. Prices are in Indian Rupees. We may cancel orders in case of pricing errors or suspected fraud, with a full refund."] },
       { heading: "Accounts", body: ["You're responsible for keeping your password confidential and for activity on your account."] },
       { heading: "Product use", body: ["Fragrances are for external use only. Patch-test before use; discontinue if irritation occurs. Keep away from children and flames."] },
       { heading: "Governing law", body: ["These terms are governed by the laws of India. Courts at Pune, Maharashtra have exclusive jurisdiction."] },

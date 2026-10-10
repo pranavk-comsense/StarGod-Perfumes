@@ -74,7 +74,7 @@ export async function removeFromWishlist(productId: string): Promise<{ ok: boole
 
 /**
  * DPDP-compliant account deletion: personal data is removed/anonymised; orders
- * are kept (anonymised) for GST/accounting. The login is soft-deleted.
+ * are kept (anonymised) for accounting. The login is soft-deleted.
  */
 export async function deleteAccount(_prev: FormState, formData: FormData): Promise<FormState> {
   const user = await getCurrentUser();

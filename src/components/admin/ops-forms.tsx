@@ -149,7 +149,7 @@ export function ReviewModeration({ reviewId, status }: { reviewId: string; statu
 }
 
 export type SettingsData = {
-  store: { name: string; legal_name: string | null; gstin: string | null; address: string | null; state: string; support_email: string; support_phone: string };
+  store: { name: string; legal_name: string | null; address: string | null; state: string; support_email: string; support_phone: string };
   shipping: { flat_fee: number; free_above: number };
   cod: { enabled: boolean; fee: number; max_order: number };
   checkout: { hold_minutes: number };
@@ -168,9 +168,8 @@ export function SettingsForm({ settings: s }: { settings: SettingsData }) {
         <legend className="mb-3 font-medium">Business details (shown on invoices)</legend>
         <Field name="storeName" label="Store name" defaultValue={d("storeName", s.store.name)} errors={e.storeName} />
         <Field name="legalName" label="Registered business name" defaultValue={d("legalName", s.store.legal_name ?? "")} />
-        <Field name="gstin" label="GSTIN" defaultValue={d("gstin", s.store.gstin ?? "")} errors={e.gstin} />
         <div className="grid gap-1.5">
-          <Label htmlFor="f-state">State of registration</Label>
+          <Label htmlFor="f-state">State</Label>
           <select id="f-state" name="state" defaultValue={d("state", s.store.state)} className={selectCls}>
             {INDIAN_STATES.map((st) => (
               <option key={st}>{st}</option>

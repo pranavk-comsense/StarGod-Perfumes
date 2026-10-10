@@ -235,7 +235,7 @@ export function CartView() {
               {quote ? formatINR(quote.total) : "—"}
             </dd>
           </div>
-          <p className="text-xs text-muted-foreground">Inclusive of GST. COD fee, if any, is added at checkout.</p>
+          <p className="text-xs text-muted-foreground">COD fee, if any, is added at checkout.</p>
         </dl>
 
         <Link

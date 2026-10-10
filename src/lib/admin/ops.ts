@@ -119,7 +119,6 @@ export async function moderateReview(reviewId: string, status: "approved" | "rej
 const settingsSchema = z.object({
   storeName: z.string().trim().min(2).max(80),
   legalName: z.string().trim().max(120).optional(),
-  gstin: z.union([z.literal(""), z.string().trim().toUpperCase().regex(/^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/, "Enter a valid 15-character GSTIN")]).optional(),
   address: z.string().trim().max(300).optional(),
   state: z.enum(INDIAN_STATES),
   supportEmail: z.email(),
@@ -144,10 +143,8 @@ export async function saveSettings(_prev: FormState, formData: FormData): Promis
       value: {
         name: s.storeName,
         legal_name: s.legalName || null,
-        gstin: s.gstin || null,
         address: s.address || null,
         state: s.state,
-        state_code: s.gstin ? s.gstin.slice(0, 2) : null,
         support_email: s.supportEmail,
         support_phone: s.supportPhone,
       },
