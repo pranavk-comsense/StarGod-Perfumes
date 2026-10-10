@@ -91,7 +91,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
     email,
     password,
     options: {
-      emailRedirectTo: `${publicEnv().NEXT_PUBLIC_SITE_URL}/auth/confirm${next ? `?next=${encodeURIComponent(next)}` : ""}`,
+      emailRedirectTo: `${publicEnv().NEXT_PUBLIC_SITE_URL}/auth/confirm?type=signup${next ? `&next=${encodeURIComponent(next)}` : ""}`,
       data: {
         full_name: fullName,
         phone: phone ?? "",
@@ -152,7 +152,8 @@ export async function requestPasswordReset(_prev: FormState, formData: FormData)
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo: `${publicEnv().NEXT_PUBLIC_SITE_URL}/reset-password`,
+    // Default Supabase templates redirect here with ?code=…; custom templates link to /auth/confirm directly.
+    redirectTo: `${publicEnv().NEXT_PUBLIC_SITE_URL}/auth/confirm?type=recovery`,
   });
   if (error && (error.code === "over_email_send_rate_limit" || error.code === "over_request_rate_limit")) {
     return { message: authErrorMessage(error), values };
