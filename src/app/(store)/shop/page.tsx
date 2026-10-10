@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { cn } from "cn";
-import { getProducts, PRICE_RANGES, type PriceRange, type ShopSort } from "@/lib/catalog/queries";
+import { getProducts, type ShopSort } from "@/lib/catalog/queries";
 import { categories, fragranceFamilies, type CategorySlug } from "@/lib/site";
 import { ProductCard } from "@/components/store/product-card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +21,7 @@ const SORTS: { value: ShopSort; label: string }[] = [
   { value: "price-desc", label: "Price: high to low" },
 ];
 
-type Params = { category?: CategorySlug; family?: string; sort: ShopSort; q?: string; price?: PriceRange };
+type Params = { category?: CategorySlug; family?: string; sort: ShopSort; q?: string };
 
 function parse(sp: Record<string, string | string[] | undefined>): Params {
   const one = (v: unknown) => (typeof v === "string" ? v : undefined);
@@ -29,15 +29,13 @@ function parse(sp: Record<string, string | string[] | undefined>): Params {
   const family = fragranceFamilies.find((f) => f.toLowerCase() === one(sp.family)?.toLowerCase());
   const sort = SORTS.find((s) => s.value === one(sp.sort))?.value ?? "featured";
   const q = one(sp.q)?.trim().slice(0, 60) || undefined;
-  const price = one(sp.price) && one(sp.price)! in PRICE_RANGES ? (one(sp.price) as PriceRange) : undefined;
-  return { category, family: family?.toLowerCase(), sort, q, price };
+  return { category, family: family?.toLowerCase(), sort, q };
 }
 
 function href(p: Partial<Params>) {
   const q = new URLSearchParams();
   if (p.category) q.set("category", p.category);
   if (p.family) q.set("family", p.family);
-  if (p.price) q.set("price", p.price);
   if (p.q) q.set("q", p.q);
   if (p.sort && p.sort !== "featured") q.set("sort", p.sort);
   const s = q.toString();
@@ -102,21 +100,13 @@ async function ShopContent({ searchParams }: Pick<PageProps<"/shop">, "searchPar
         })}
       </div>
 
-      <div className="mt-2 flex gap-2 overflow-x-auto pb-2">
-        {(Object.keys(PRICE_RANGES) as PriceRange[]).map((key) => {
-          const active = params.price === key;
-          return (
-            <Chip key={key} subtle active={active} href={href({ ...params, price: active ? undefined : key })}>
-              {PRICE_RANGES[key].label}
-            </Chip>
-          );
-        })}
-        {params.q && (
+      {params.q && (
+        <div className="mt-2 flex gap-2 pb-2">
           <Chip subtle active={false} href={href({ ...params, q: undefined })}>
             Clear search ✕
           </Chip>
-        )}
-      </div>
+        </div>
+      )}
 
       {products.length > 0 ? (
         <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">

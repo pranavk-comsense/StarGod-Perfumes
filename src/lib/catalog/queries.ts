@@ -121,13 +121,6 @@ function withoutCollections(item: ListItem): ProductCardData {
   return card as ProductCardData;
 }
 
-export const PRICE_RANGES = {
-  "under-1000": { label: "Under ₹1,000", min: 0, max: 99_999 },
-  "1000-2000": { label: "₹1,000 – ₹2,000", min: 100_000, max: 200_000 },
-  "2000-plus": { label: "Above ₹2,000", min: 200_001, max: Number.MAX_SAFE_INTEGER },
-} as const;
-export type PriceRange = keyof typeof PRICE_RANGES;
-
 export type ShopSort = "featured" | "price-asc" | "price-desc" | "newest" | "rating";
 
 export type ShopFilters = {
@@ -135,7 +128,6 @@ export type ShopFilters = {
   family?: string;
   sort?: ShopSort;
   q?: string;
-  price?: PriceRange;
 };
 
 /**
@@ -148,15 +140,11 @@ export async function getProducts(filters: ShopFilters = {}): Promise<ProductCar
   cacheLife("hours");
 
   let items = await fetchAllCards();
-  const { category, family, sort = "featured", q, price } = filters;
+  const { category, family, sort = "featured", q } = filters;
 
   if (category) items = items.filter((p) => p.collections.includes(category));
 
   if (family) items = items.filter((p) => p.families.some((f) => f.toLowerCase() === family.toLowerCase()));
-  if (price) {
-    const r = PRICE_RANGES[price];
-    items = items.filter((p) => p.price >= r.min && p.price <= r.max);
-  }
   if (q) {
     const terms = q.toLowerCase().split(/\s+/).filter(Boolean).slice(0, 6);
     items = items.filter((p) => terms.every((t) => p.haystack.includes(t) || p.haystack.includes(t.replace(/s$/, ""))));
