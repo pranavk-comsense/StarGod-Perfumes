@@ -24,14 +24,14 @@ export default function HomePage() {
             <Link
               key={c.slug}
               href={`/shop?category=${c.slug}`}
-              className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-md p-5 sm:p-6"
+              className="group relative flex aspect-square flex-col justify-end overflow-hidden rounded-md p-5 sm:p-6 lg:aspect-[5/4]"
             >
               <Image
                 src={CATEGORY_IMAGES[c.slug]}
                 alt=""
                 fill
                 sizes="(min-width: 640px) 50vw, 100vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover object-[center_35%] transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <div className="relative text-white">
