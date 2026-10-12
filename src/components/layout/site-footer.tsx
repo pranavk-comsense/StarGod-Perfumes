@@ -65,7 +65,9 @@ export function SiteFooter() {
       </div>
       <div className="border-t">
         <div className="container-page flex flex-col gap-2 pb-24 pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:py-5">
-          <p>© {site.name}. All rights reserved.</p>
+          <p>
+            © {site.name} · A brand of {site.legalName}. All rights reserved.
+          </p>
           <p>Secure payments: UPI · Cards · Net banking · Wallets · Cash on Delivery</p>
         </div>
       </div>

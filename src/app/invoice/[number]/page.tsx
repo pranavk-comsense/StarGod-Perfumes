@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/orders/format";
 import { formatINR } from "@/lib/money";
 import { PrintButton } from "@/components/orders/print-button";
 import { getSettings } from "@/lib/settings";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Invoice", robots: { index: false } };
 export const instant = false;
@@ -33,7 +34,7 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
         <div>
           <p className="font-brand text-2xl font-extrabold text-primary">StarGod</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold">Premium Perfumes</p>
-          <p className="mt-3">{store.legal_name ?? store.name}</p>
+          <p className="mt-3">{store.legal_name ?? site.legalName}</p>
           <p className="max-w-xs text-neutral-600">{store.address ?? "[Registered address: add in Admin → Settings]"}</p>
         </div>
         <div className="text-right">

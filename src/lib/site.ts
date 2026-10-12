@@ -1,5 +1,7 @@
 export const site = {
   name: "StarGod Perfumes",
+  /** Registered business name (StarGod Perfumes is its brand). */
+  legalName: "Khushify Fragrances",
   tagline: "24 Hour Long Lasting Perfumes",
   supportEmail: "hello@thestargod.com",
   supportPhone: "+91 96696 61359",

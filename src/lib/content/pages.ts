@@ -72,6 +72,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
     description: "How we collect, use and protect your personal data.",
     updated: "October 2026",
     sections: [
+      { heading: "Who we are", body: [`${site.name} is a brand of ${site.legalName}, ${site.store.street}, ${site.store.city}, ${site.store.region} ${site.store.postalCode}. ${site.legalName} is responsible for the personal data collected on this website.`] },
       { heading: "What we collect", body: ["Name, email, phone number, delivery addresses and order history. Payments are processed by our payment partner; we never see or store your full card or UPI details."] },
       { heading: "How we use it", body: ["To process and deliver orders, provide support, prevent fraud and, only if you opt in, send you offers. You can unsubscribe at any time."] },
       { heading: "Sharing", body: ["We share only what's needed with our payment gateway, courier partners and email provider to fulfil your order. We never sell your data."] },
@@ -84,6 +85,7 @@ export const INFO_PAGES: Record<string, InfoPage> = {
     description: "The terms that apply when you use our website and buy from us.",
     updated: "October 2026",
     sections: [
+      { heading: "About us", body: [`This website is operated by ${site.legalName}, the registered business behind the ${site.name} brand. "We", "us" and "our" in these terms refer to ${site.legalName}.`] },
       { heading: "Orders", body: ["All orders are subject to availability and confirmation. Prices are in Indian Rupees. We may cancel orders in case of pricing errors or suspected fraud, with a full refund."] },
       { heading: "Accounts", body: ["You're responsible for keeping your password confidential and for activity on your account."] },
       { heading: "Product use", body: ["Fragrances are for external use only. Patch-test before use; discontinue if irritation occurs. Keep away from children and flames."] },

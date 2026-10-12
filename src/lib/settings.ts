@@ -20,7 +20,7 @@ export type Settings = { store: StoreInfo; shipping: ShippingSettings; cod: CodS
 const DEFAULTS: Settings = {
   store: {
     name: "StarGod Perfumes",
-    legal_name: null,
+    legal_name: "Khushify Fragrances",
     gstin: null,
     address: "Shop No. 5, Pinnacle Prestige, Tilak Rd, Pantancha Gate, Sadashiv Peth, Pune, Maharashtra 411030",
     state: "Maharashtra",

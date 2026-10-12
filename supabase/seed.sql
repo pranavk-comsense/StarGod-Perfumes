@@ -11,7 +11,7 @@ insert into public.store_settings (key, value) values
   ('shipping', '{"flat_fee": 7900, "free_above": 99900}'),
   ('cod',      '{"enabled": true, "fee": 4900, "max_order": 500000}'),
   ('checkout', '{"hold_minutes": 30}'),
-  ('store',    '{"name": "StarGod Perfumes", "legal_name": null, "gstin": null, "address": "Shop No. 5, Pinnacle Prestige, Tilak Rd, Pantancha Gate, Sadashiv Peth, Pune, Maharashtra 411030", "state": "Maharashtra", "state_code": "27", "support_email": "hello@thestargod.com", "support_phone": "+91 96696 61359"}')
+  ('store',    '{"name": "StarGod Perfumes", "legal_name": "Khushify Fragrances", "gstin": null, "address": "Shop No. 5, Pinnacle Prestige, Tilak Rd, Pantancha Gate, Sadashiv Peth, Pune, Maharashtra 411030", "state": "Maharashtra", "state_code": "27", "support_email": "hello@thestargod.com", "support_phone": "+91 96696 61359"}')
 on conflict (key) do update set value = excluded.value;
 
 -- -----------------------------------------------------------------------------
