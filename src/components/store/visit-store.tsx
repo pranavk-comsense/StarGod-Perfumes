@@ -1,4 +1,4 @@
-import { ClockIcon, MapPinIcon, MessageCircleIcon, NavigationIcon } from "lucide-react";
+import { BuildingIcon, ClockIcon, MapPinIcon, MessageCircleIcon, NavigationIcon } from "lucide-react";
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { site } from "@/lib/site";
@@ -18,6 +18,12 @@ export function VisitStore({ className }: { className?: string }) {
             Explore <b className="text-foreground">1500+ international fragrances</b> in person at our Sadashiv Peth store. Our team will help you find your signature.
           </p>
           <ul className="mt-6 grid gap-3 text-sm">
+            <li className="flex gap-3">
+              <BuildingIcon className="mt-0.5 size-5 shrink-0 text-gold" strokeWidth={1.5} />
+              <span>
+                {site.name}, a brand of <b className="font-semibold">{site.legalName}</b>
+              </span>
+            </li>
             <li className="flex gap-3">
               <MapPinIcon className="mt-0.5 size-5 shrink-0 text-gold" strokeWidth={1.5} />
               <address className="not-italic">
@@ -62,6 +68,7 @@ export function StoreJsonLd() {
     "@context": "https://schema.org",
     "@type": "Store",
     name: site.store.name,
+    legalName: site.legalName,
     url,
     email: site.supportEmail,
     telephone: site.supportPhone.replace(/\s/g, ""),

@@ -12,6 +12,9 @@ export function SiteFooter() {
           <p className="max-w-[17rem] text-[13px] leading-snug text-muted-foreground">
             Long-lasting eau de parfums, inspired by the world&apos;s most loved scents.
           </p>
+          <p className="text-[13px] leading-snug text-muted-foreground">
+            Owned &amp; operated by <span className="font-semibold text-foreground">{site.legalName}</span>
+          </p>
           <ul className="space-y-1.5 text-[13px] leading-snug text-muted-foreground">
             <li className="flex gap-2">
               <MapPinIcon className="mt-0.5 size-3.5 shrink-0" />
