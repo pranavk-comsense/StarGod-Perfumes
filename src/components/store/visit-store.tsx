@@ -1,6 +1,7 @@
-import { BuildingIcon, ClockIcon, MapPinIcon, MessageCircleIcon, NavigationIcon } from "lucide-react";
+import { BuildingIcon, ClockIcon, MapPinIcon, NavigationIcon } from "lucide-react";
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
+import { StoreTourButton } from "@/components/store/store-tour";
 import { site } from "@/lib/site";
 import { cn } from "cn";
 
@@ -50,9 +51,7 @@ export function VisitStore({ className }: { className?: string }) {
             <a href={site.store.mapsUrl} target="_blank" rel="noopener noreferrer" className={buttonVariants()}>
               <NavigationIcon /> Get directions
             </a>
-            <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: "outline" })}>
-              <MessageCircleIcon /> WhatsApp us
-            </a>
+            <StoreTourButton />
           </div>
         </div>
         <div className="relative isolate min-h-96 overflow-hidden bg-primary text-primary-foreground">

@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { WhatsAppButton } from "@/components/store/whatsapp-button";
 import { StoreJsonLd } from "@/components/store/visit-store";
+import { GoldDustCursor } from "@/components/store/gold-dust-cursor";
 
 export default function StoreLayout({ children }: LayoutProps<"/">) {
   return (
@@ -16,6 +17,7 @@ export default function StoreLayout({ children }: LayoutProps<"/">) {
       </main>
       <SiteFooter />
       <WhatsAppButton />
+      <GoldDustCursor />
       <StoreJsonLd />
     </CartProvider>
   );
