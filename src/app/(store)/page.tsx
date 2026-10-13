@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/store/product-card";
 import { VisitStore } from "@/components/store/visit-store";
 import { RatingStars } from "@/components/store/rating-stars";
 import { getCollectionProducts, getLatestReviews } from "@/lib/catalog/queries";
+import { GOOGLE_LISTING_URL, GOOGLE_RATING, GOOGLE_REVIEWS } from "@/lib/content/google-reviews";
 import { categories, fragranceFamilies } from "@/lib/site";
 import { cn } from "cn";
 
@@ -80,6 +81,8 @@ export default function HomePage() {
       <Suspense>
         <Reviews />
       </Suspense>
+
+      <GoogleReviews />
 
       <VisitStore className="mt-20" />
     </>
@@ -321,6 +324,50 @@ async function Reviews() {
         </li>
       ))}
     </ul>
+    </section>
+  );
+}
+
+function GoogleReviews() {
+  return (
+    <section className="container-page mt-20" aria-labelledby="google-reviews-heading">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="eyebrow">Google reviews</p>
+          <h2 id="google-reviews-heading" className="mt-2 text-3xl sm:text-4xl">
+            Loved in Pune
+          </h2>
+        </div>
+        <a
+          href={GOOGLE_LISTING_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-full border bg-card px-4 py-2 text-sm transition-colors hover:border-primary"
+        >
+          <span className="font-heading text-2xl leading-none">{GOOGLE_RATING.score}</span>
+          <RatingStars value={5} />
+          <span className="text-muted-foreground">{GOOGLE_RATING.count} reviews on Google</span>
+        </a>
+      </div>
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {GOOGLE_REVIEWS.map((r) => (
+          <li key={r.author} className="flex flex-col rounded-md border bg-card p-6">
+            <RatingStars value={5} />
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">&ldquo;{r.text}&rdquo;</p>
+            <p className="mt-5 flex items-center gap-3 text-sm font-medium">
+              <span aria-hidden className="grid size-8 place-items-center rounded-full bg-accent font-heading text-primary-deep">
+                {r.author[0]}
+              </span>
+              {r.author}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-center text-sm">
+        <a href={GOOGLE_LISTING_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-primary">
+          Read all reviews on Google
+        </a>
+      </p>
     </section>
   );
 }
