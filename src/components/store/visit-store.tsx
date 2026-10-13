@@ -4,6 +4,14 @@ import { buttonVariants } from "@/components/ui/button";
 import { site } from "@/lib/site";
 import { cn } from "cn";
 
+/** Photos from the StarGod Premium Perfumes Google listing (copied 13 Oct 2026). */
+const STORE_PHOTOS = [
+  { src: "/images/store/storefront.webp", alt: "StarGod Premium Perfumes storefront on Tilak Road, Pune" },
+  { src: "/images/store/interior-arches.webp", alt: "Arched perfume shelves and gift hampers inside the store" },
+  { src: "/images/store/shelf-arch.webp", alt: "Backlit arch shelf lined with StarGod perfume bottles" },
+  { src: "/images/store/gift-pouches.webp", alt: "StarGod perfumes in satin gift pouches" },
+];
+
 /** "Visit our store" block for the homepage and contact page. */
 export function VisitStore({ className }: { className?: string }) {
   return (
@@ -47,9 +55,22 @@ export function VisitStore({ className }: { className?: string }) {
             </a>
           </div>
         </div>
-        <div className="relative min-h-64 bg-primary text-primary-foreground">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,var(--lilac),transparent_55%)] opacity-30" />
-          <Image src="/brand/emblem-white.png" alt="" width={584} height={784} unoptimized aria-hidden className="absolute right-6 top-6 h-40 w-auto opacity-20" />
+        <div className="relative isolate min-h-96 overflow-hidden bg-primary text-primary-foreground">
+          {STORE_PHOTOS.map((p, i) => (
+            <Image
+              key={p.src}
+              src={p.src}
+              alt={p.alt}
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className={cn(
+                "-z-20 object-cover opacity-0 motion-safe:animate-slide-fade",
+                i === 0 && "motion-reduce:opacity-100",
+              )}
+              style={{ animationDelay: `${i * 5}s` }}
+            />
+          ))}
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary-deep/90 via-primary-deep/30 to-transparent" />
           <div className="relative flex h-full flex-col justify-end p-8 sm:p-12">
             <p className="font-heading text-5xl leading-none">Sadashiv Peth</p>
             <p className="mt-2 text-sm tracking-[0.3em] text-primary-foreground/70">PUNE · 411030</p>

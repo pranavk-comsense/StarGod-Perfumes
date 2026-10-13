@@ -5,6 +5,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Four-slide crossfade: each slide is visible for a quarter of the cycle,
+     staggered with animation-delay (see VisitStore). */
+  --animate-slide-fade: slide-fade 20s ease-in-out infinite both;
+  @keyframes slide-fade {
+    0% { opacity: 0; transform: scale(1.06); }
+    6%, 25% { opacity: 1; }
+    31%, 100% { opacity: 0; transform: scale(1); }
+  }
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
