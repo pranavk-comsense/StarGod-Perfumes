@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { BanknoteIcon, CreditCardIcon, Loader2Icon, LockIcon, MapPinIcon, PlusIcon } from "lucide-react";
 import { cn } from "cn";
 import { getQuote } from "@/lib/cart/actions";
+import { checkPincode } from "@/lib/store/actions";
 import { placeOrder } from "@/lib/checkout/actions";
 import type { CartItem, Quote } from "@/lib/cart/types";
 import { formatAddress, type Address } from "@/lib/validation/address";
@@ -46,7 +47,27 @@ export function CheckoutView({
     startQuote(async () => setQuote(await getQuote(items, coupon, method)));
   }, [items, coupon, method]);
 
-  const codBlocked = quote ? !quote.cod_available : false;
+  // Courier coverage for the chosen address (only a confirmed "no" blocks checkout).
+  const pincode = addresses.find((a) => a.id === addressId)?.pincode ?? "";
+  const [delivery, setDelivery] = useState<{ pincode: string; serviceable: boolean; codAvailable: boolean } | null>(null);
+  useEffect(() => {
+    if (!pincode) return;
+    let stale = false;
+    checkPincode(pincode).then((r) => {
+      if (stale || !r.ok) return;
+      const d = { pincode, serviceable: !r.result.confirmed || r.result.serviceable, codAvailable: !r.result.confirmed || r.result.codAvailable };
+      setDelivery(d);
+      if (d.serviceable && !d.codAvailable && onlineEnabled) setMethod((m) => (m === "cod" ? "prepaid" : m));
+    });
+    return () => {
+      stale = true;
+    };
+  }, [pincode, onlineEnabled]);
+  const current = delivery?.pincode === pincode ? delivery : null;
+  const undeliverable = current ? !current.serviceable : false;
+  const codNoCourier = current ? current.serviceable && !current.codAvailable : false;
+
+  const codBlocked = (quote ? !quote.cod_available : false) || codNoCourier;
   const issues = quote?.errors.filter((e) => e.code !== "COD_UNAVAILABLE") ?? [];
 
   function submit() {
@@ -91,6 +112,11 @@ export function CheckoutView({
               ))}
             </div>
           )}
+          {undeliverable && !addingAddress && (
+            <p role="alert" className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              Sorry, we don&apos;t deliver to {pincode} yet. Please choose or add a different address.
+            </p>
+          )}
           {addingAddress ? (
             <div className="mt-5">
               <AddressForm
@@ -132,11 +158,11 @@ export function CheckoutView({
             />
             <PayOption
               checked={method === "cod"}
-              disabled={codBlocked && method !== "cod"}
+              disabled={(codBlocked && method !== "cod") || codNoCourier}
               onSelect={() => setMethod("cod")}
               icon={<BanknoteIcon className="size-5" />}
               title="Cash on Delivery"
-              text={codBlocked ? (quote?.cod_unavailable_reason ?? "Not available") : "Pay in cash or UPI when your order arrives. A small COD fee applies."}
+              text={codNoCourier ? `Not available for ${pincode}` : codBlocked ? (quote?.cod_unavailable_reason ?? "Not available") : "Pay in cash or UPI when your order arrives. A small COD fee applies."}
             />
           </div>
         </section>
@@ -180,7 +206,7 @@ export function CheckoutView({
         <div className="mt-5">
           <FormAlert message={error ?? (issues.length ? "Some items in your bag are no longer available in that quantity." : undefined)} />
         </div>
-        <Button size="lg" className="mt-4 w-full" disabled={placing || quoting || !quote || issues.length > 0 || !addressId || addingAddress} onClick={submit}>
+        <Button size="lg" className="mt-4 w-full" disabled={placing || quoting || !quote || issues.length > 0 || !addressId || addingAddress || undeliverable || (method === "cod" && codNoCourier)} onClick={submit}>
           {placing ? <Loader2Icon className="animate-spin" /> : <LockIcon />}
           {placing ? "Placing order…" : method === "cod" ? "Place order" : `Pay ${quote ? formatINR(quote.total) : ""}`}
         </Button>

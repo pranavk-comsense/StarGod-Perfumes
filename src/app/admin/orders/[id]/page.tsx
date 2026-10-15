@@ -12,6 +12,8 @@ import { formatINR } from "@/lib/money";
 import { OrderStatusBadge } from "@/components/store/status-badge";
 import { AddressBlock, OrderItems, OrderTotals, ShipmentTracking } from "@/components/orders/order-summary";
 import { OrderActions } from "@/components/admin/order-actions";
+import { getReturnReasons, isShipmozoConfigured } from "@/lib/shipping/shipmozo";
+import { CancelReturnButton, ReturnForm } from "@/components/admin/shipmozo-forms";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata = { title: "Order" };
@@ -26,6 +28,14 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
   if (!order) notFound();
 
   const canRefund = can(user.role, "refunds.manage");
+  const shipmozo = isShipmozoConfigured();
+  const canShip = can(user.role, "shipments.manage");
+  const showReturns = shipmozo && canShip && ["delivered", "returned"].includes(order.status);
+  const [{ data: returns }, returnReasons] = await Promise.all([
+    showReturns ? createAdminClient().from("return_shipments").select("id, awb, courier_name, status, reason, customer_request, is_active, created_at").eq("order_id", id).order("created_at") : Promise.resolve({ data: null }),
+    showReturns && order.status === "delivered" ? getReturnReasons().catch(() => []) : Promise.resolve([]),
+  ]);
+  const activeReturn = returns?.find((r) => r.is_active);
   const [{ data: customer }, { data: payments }] = await Promise.all([
     supabase.from("profiles").select("full_name, email, phone").eq("id", order.user_id).maybeSingle(),
     canRefund ? createAdminClient().from("payments").select("cf_payment_id, amount, status, method, created_at").eq("order_id", id).order("created_at") : Promise.resolve({ data: null }),
@@ -74,7 +84,8 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
               status={order.status}
               paymentMethod={order.payment_method}
               paymentStatus={order.payment_status}
-              activeShipmentId={active?.id ?? null}
+              activeShipment={active ? { id: active.id, provider: active.provider, awb: active.awb } : null}
+              shipmozo={shipmozo}
               refundable={refundable}
               needsRefund={order.needs_refund}
               adminNote={order.admin_note}
@@ -91,6 +102,42 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
             <section className="rounded-md border bg-card p-5">
               <h2 className="mb-4 font-sans text-base font-medium">Shipment</h2>
               <ShipmentTracking order={order} />
+            </section>
+          )}
+
+          {showReturns && (
+            <section className="rounded-md border bg-card p-5">
+              <h2 className="mb-4 font-sans text-base font-medium">Returns</h2>
+              {returns && returns.length > 0 && (
+                <ul className="mb-4 grid gap-3 text-sm">
+                  {returns.map((r) => (
+                    <li key={r.id} className="flex flex-wrap items-center justify-between gap-2">
+                      <span>
+                        <span className="font-medium capitalize">{r.status.replace(/_/g, " ")}</span>
+                        <span className="text-muted-foreground">
+                          {" "}
+                          · {r.customer_request === "EXCHANGE" ? "Exchange" : "Refund"} · {r.reason}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {r.awb ? `${r.courier_name ?? "Courier"} · AWB ${r.awb}` : "Awaiting AWB"} · {formatDateTime(r.created_at)}
+                        </span>
+                      </span>
+                      <span className="flex gap-1.5">
+                        {r.awb && r.is_active && (
+                          <a href={`/admin/shipments/label/${encodeURIComponent(r.awb)}`} target="_blank" rel="noopener" className={buttonVariants({ variant: "outline", size: "sm" })}>
+                            Label
+                          </a>
+                        )}
+                        {r.is_active && r.status !== "delivered" && <CancelReturnButton orderId={order.id} returnId={r.id} />}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {order.status === "delivered" && (!activeReturn || !activeReturn.awb) && <ReturnForm orderId={order.id} reasons={returnReasons} />}
+              {order.status === "delivered" && activeReturn?.status === "delivered" && (
+                <p className="mt-3 text-xs text-muted-foreground">The parcel is back at the store. Use &ldquo;Mark returned (restock)&rdquo; above, then refund.</p>
+              )}
             </section>
           )}
 

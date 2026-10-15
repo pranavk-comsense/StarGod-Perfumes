@@ -461,6 +461,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"return_shipments": {
+                  Row: {
+                    "awb": string | null,"comment": string | null,"courier_name": string | null,"created_at": string,"created_by": string | null,"customer_request": string,"id": string,"is_active": boolean,"last_synced_at": string | null,"order_id": string,"provider_ref": string,"raw": Json | null,"reason": string | null,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "awb"?: string | null,"comment"?: string | null,"courier_name"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_request": string,"id"?: string,"is_active"?: boolean,"last_synced_at"?: string | null,"order_id": string,"provider_ref": string,"raw"?: Json | null,"reason"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "awb"?: string | null,"comment"?: string | null,"courier_name"?: string | null,"created_at"?: string,"created_by"?: string | null,"customer_request"?: string,"id"?: string,"is_active"?: boolean,"last_synced_at"?: string | null,"order_id"?: string,"provider_ref"?: string,"raw"?: Json | null,"reason"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "return_shipments_order_id_fkey"
+      columns: ["order_id"]
+isOneToOne: false
+      referencedRelation: "orders"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"reviews": {
                   Row: {
                     "body": string | null,"created_at": string,"id": string,"is_verified": boolean,"product_id": string,"rating": number,"status": Database["public"]['Enums']["review_status"],"title": string | null,"updated_at": string,"user_id": string
@@ -509,14 +529,14 @@ isOneToOne: false
                   ]
                 },"shipments": {
                   Row: {
-                    "awb": string | null,"charges": number | null,"courier_id": string | null,"courier_name": string | null,"created_at": string,"dims": Json | null,"id": string,"is_active": boolean,"label_url": string | null,"order_id": string,"pickup_date": string | null,"provider": string,"provider_ref": string | null,"raw": Json | null,"status": string,"tracking_url": string | null,"updated_at": string,"weight_g": number | null
+                    "awb": string | null,"charges": number | null,"courier_id": string | null,"courier_name": string | null,"created_at": string,"dims": Json | null,"id": string,"is_active": boolean,"label_url": string | null,"last_synced_at": string | null,"order_id": string,"pickup_date": string | null,"provider": string,"provider_ref": string | null,"raw": Json | null,"status": string,"tracking_url": string | null,"updated_at": string,"weight_g": number | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "awb"?: string | null,"charges"?: number | null,"courier_id"?: string | null,"courier_name"?: string | null,"created_at"?: string,"dims"?: Json | null,"id"?: string,"is_active"?: boolean,"label_url"?: string | null,"order_id": string,"pickup_date"?: string | null,"provider"?: string,"provider_ref"?: string | null,"raw"?: Json | null,"status"?: string,"tracking_url"?: string | null,"updated_at"?: string,"weight_g"?: number | null
+                    "awb"?: string | null,"charges"?: number | null,"courier_id"?: string | null,"courier_name"?: string | null,"created_at"?: string,"dims"?: Json | null,"id"?: string,"is_active"?: boolean,"label_url"?: string | null,"last_synced_at"?: string | null,"order_id": string,"pickup_date"?: string | null,"provider"?: string,"provider_ref"?: string | null,"raw"?: Json | null,"status"?: string,"tracking_url"?: string | null,"updated_at"?: string,"weight_g"?: number | null
                   }
                   Update: {
-                    "awb"?: string | null,"charges"?: number | null,"courier_id"?: string | null,"courier_name"?: string | null,"created_at"?: string,"dims"?: Json | null,"id"?: string,"is_active"?: boolean,"label_url"?: string | null,"order_id"?: string,"pickup_date"?: string | null,"provider"?: string,"provider_ref"?: string | null,"raw"?: Json | null,"status"?: string,"tracking_url"?: string | null,"updated_at"?: string,"weight_g"?: number | null
+                    "awb"?: string | null,"charges"?: number | null,"courier_id"?: string | null,"courier_name"?: string | null,"created_at"?: string,"dims"?: Json | null,"id"?: string,"is_active"?: boolean,"label_url"?: string | null,"last_synced_at"?: string | null,"order_id"?: string,"pickup_date"?: string | null,"provider"?: string,"provider_ref"?: string | null,"raw"?: Json | null,"status"?: string,"tracking_url"?: string | null,"updated_at"?: string,"weight_g"?: number | null
                   }
                   Relationships: [
                     {
@@ -627,6 +647,9 @@ isOneToOne: false
                            },
 "cancel_order":
 { Args: { "p_actor": string,"p_order_id": string,"p_reason"?: string }; Returns: Json
+                           },
+"cancel_shipment":
+{ Args: { "p_actor": string,"p_reason"?: string,"p_shipment_id": string }; Returns: undefined
                            },
 "create_refund":
 { Args: { "p_actor": string,"p_amount": number,"p_order_id": string,"p_reason": string }; Returns: {

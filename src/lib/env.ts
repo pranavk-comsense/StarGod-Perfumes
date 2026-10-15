@@ -19,6 +19,9 @@ const serverSchema = z.object({
   CASHFREE_API_VERSION: z.string().default("2025-01-01"),
   SHIPMOZO_PUBLIC_KEY: z.string().min(1).optional(),
   SHIPMOZO_PRIVATE_KEY: z.string().min(1).optional(),
+  /** Pickup warehouse; defaults to the account's default (or first) warehouse. */
+  SHIPMOZO_WAREHOUSE_ID: z.string().min(1).optional(),
+  SHIPMOZO_PICKUP_PINCODE: z.string().regex(/^[1-9][0-9]{5}$/).default("411030"),
   CRON_SECRET: z.string().min(16).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(3).default("StarGod Perfumes <orders@thestargod.com>"),

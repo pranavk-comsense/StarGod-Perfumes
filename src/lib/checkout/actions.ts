@@ -9,6 +9,7 @@ import { publicEnv } from "@/lib/env";
 import { rateLimit } from "@/lib/rate-limit";
 import { sendOrderEmail } from "@/lib/email/order-emails";
 import { createOrder, getOrder, isCashfreeConfigured } from "@/lib/payments/cashfree";
+import { shippingProvider } from "@/lib/shipping/provider";
 
 const schema = z.object({
   checkoutKey: z.uuid(),
@@ -66,6 +67,11 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<PlaceOr
   ]);
   if (!address) return { ok: false, message: "Please choose a delivery address." };
   if (!cart?.length) return { ok: false, message: "Your bag is empty." };
+
+  // Only a confirmed courier answer blocks the order; estimates (Shipmozo down/unconfigured) let it through.
+  const delivery = await shippingProvider().checkServiceability(address.pincode).catch(() => null);
+  if (delivery?.confirmed && !delivery.serviceable) return { ok: false, message: `Sorry, we don't deliver to ${address.pincode} yet. Please use a different address.` };
+  if (delivery?.confirmed && paymentMethod === "cod" && !delivery.codAvailable) return { ok: false, message: `Cash on Delivery isn't available for ${address.pincode}. Please pay online.` };
 
   const admin = createAdminClient();
   const { data, error } = await admin.rpc("place_order", {
