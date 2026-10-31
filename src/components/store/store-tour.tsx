@@ -7,7 +7,7 @@ import { ArrowUpIcon, ChevronLeftIcon, MaximizeIcon, MinimizeIcon, MoveIcon, Rot
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "cn";
 
-type StopId = "outside" | "entrance" | "gift-wall" | "golden-arch" | "pouches";
+type StopId = "entrance" | "arch-wall" | "window-side" | "gift-wall" | "golden-arch" | "pouches";
 
 type Hotspot = {
   to: StopId;
@@ -31,29 +31,46 @@ type Stop = {
   hotspots: Hotspot[];
 };
 
-/** Photos from the StarGod Premium Perfumes Google listing (copied 13 Oct 2026). */
+/** Photos from the in-store shoot. The tour starts at the first stop. */
 const STOPS: Stop[] = [
-  {
-    id: "outside",
-    name: "Tilak Road",
-    caption: "Our storefront at Pinnacle Prestige, Sadashiv Peth",
-    src: "/images/store/tour/outside.webp",
-    width: 1849,
-    height: 2000,
-    focus: [55, 70],
-    hotspots: [{ to: "entrance", x: 62, y: 86, label: "Step inside" }],
-  },
   {
     id: "entrance",
     name: "Entrance",
     caption: "1500+ fragrances under the arches",
     src: "/images/store/tour/entrance.webp",
-    width: 1080,
-    height: 960,
+    width: 2000,
+    height: 1333,
+    focus: [45, 55],
+    hotspots: [
+      { to: "gift-wall", x: 8, y: 62, label: "Gift corner", turn: -35 },
+      { to: "arch-wall", x: 42, y: 64, label: "Arch wall", turn: 35 },
+    ],
+  },
+  {
+    id: "arch-wall",
+    name: "Arch wall",
+    caption: "Twin glowing arches lined with StarGod eau de parfum",
+    src: "/images/store/tour/arch-wall.webp",
+    width: 2000,
+    height: 1333,
+    focus: [55, 50],
+    hotspots: [
+      { to: "window-side", x: 14, y: 72, label: "By the window", turn: -40 },
+      { to: "golden-arch", x: 72, y: 60, label: "Signature shelves", turn: 25 },
+      { to: "entrance", x: 50, y: 92, label: "Back to entrance", turn: 180 },
+    ],
+  },
+  {
+    id: "window-side",
+    name: "By the window",
+    caption: "Arches of fragrance beside the Tilak Road window",
+    src: "/images/store/tour/window-side.webp",
+    width: 2000,
+    height: 1333,
     focus: [50, 50],
     hotspots: [
-      { to: "gift-wall", x: 32, y: 74, label: "Gift corner", turn: -35 },
-      { to: "golden-arch", x: 60, y: 76, label: "Signature shelves", turn: 35 },
+      { to: "gift-wall", x: 78, y: 82, label: "Gift corner", turn: 35 },
+      { to: "arch-wall", x: 38, y: 92, label: "Back to arch wall", turn: -150 },
     ],
   },
   {
@@ -61,12 +78,12 @@ const STOPS: Stop[] = [
     name: "Gift corner",
     caption: "Gift boxes, hampers and satin pouches",
     src: "/images/store/tour/gift-wall.webp",
-    width: 2000,
-    height: 1500,
-    focus: [40, 55],
+    width: 1500,
+    height: 2000,
+    focus: [50, 50],
     hotspots: [
-      { to: "pouches", x: 17, y: 60, label: "Satin pouches", turn: -20 },
-      { to: "golden-arch", x: 75, y: 86, label: "Signature shelves", turn: 30 },
+      { to: "pouches", x: 52, y: 47, label: "Satin pouches", turn: -20 },
+      { to: "golden-arch", x: 88, y: 62, label: "Signature shelves", turn: 30 },
     ],
   },
   {
@@ -76,7 +93,7 @@ const STOPS: Stop[] = [
     src: "/images/store/tour/golden-arch.webp",
     width: 1500,
     height: 2000,
-    focus: [55, 58],
+    focus: [50, 50],
     hotspots: [{ to: "entrance", x: 18, y: 80, label: "Back to entrance", turn: -150 }],
   },
   {
@@ -148,7 +165,7 @@ export function StoreTour() {
   const drag = useRef<{ id: number; x: number; y: number; start: Pan } | null>(null);
 
   const [box, setBox] = useState<Box | null>(null);
-  const [current, setCurrent] = useState<StopId>("outside");
+  const [current, setCurrent] = useState<StopId>("entrance");
   const [history, setHistory] = useState<StopId[]>([]);
   const [walking, setWalking] = useState(false);
   const [moved, setMoved] = useState(false);

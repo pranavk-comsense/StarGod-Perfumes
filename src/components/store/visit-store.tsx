@@ -10,7 +10,7 @@ const STORE_PHOTOS = [
   { src: "/images/store/storefront.webp", alt: "StarGod Premium Perfumes storefront on Tilak Road, Pune" },
   { src: "/images/store/interior-arches.webp", alt: "Arched perfume shelves and gift hampers inside the store" },
   { src: "/images/store/shelf-arch.webp", alt: "Backlit arch shelf lined with StarGod perfume bottles" },
-  { src: "/images/store/gift-pouches.webp", alt: "StarGod perfumes in satin gift pouches" },
+  { src: "/images/store/gift-pouches.webp", alt: "StarGod satin gift pouches and perfume bottles on a store shelf" },
 ];
 
 /** "Visit our store" block for the homepage and contact page. */
