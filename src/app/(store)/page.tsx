@@ -146,7 +146,7 @@ function Hero() {
             <Image src="/brand/hero-stage.svg" alt="" width={800} height={760} priority unoptimized className="h-auto w-full" />
             <Image
               src="/brand/hero-bottles-real.png"
-              alt="StarGod Quick Storm, Rogue Alpha and Iron Will eau de parfum bottles"
+              alt="StarGod Quick Storm, Rogue Alpha and Silent Killer eau de parfum bottles"
               width={800}
               height={760}
               priority
@@ -272,7 +272,7 @@ function BrandStory() {
 function OfferBanner() {
   const tiers = [
     { slug: "silver", name: "Silver Collection", price: "₹1,455", mrp: "₹3,333", image: "/images/products/potion-trail-angle.webp", tone: "from-zinc-200 to-zinc-50" },
-    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/iron-will-angle.webp", tone: "from-amber-200 to-amber-50" },
+    { slug: "golden", name: "Golden Collection", price: "₹1,855", mrp: "₹4,444", image: "/images/products/silent-killer-angle.webp", tone: "from-amber-200 to-amber-50" },
   ];
   return (
     <section id="offer" className="container-page mt-20 scroll-mt-28">

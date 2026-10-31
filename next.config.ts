@@ -77,6 +77,8 @@ const nextConfig: NextConfig = {
       ...["silver", "golden"].map((c) => ({ source: `/${c}`, destination: `/shop?category=${c}`, permanent: true })),
       // Gender pages were retired: every perfume is unisex.
       ...["men", "women", "unisex"].map((c) => ({ source: `/${c}`, destination: "/shop", permanent: true })),
+      // Iron Will was renamed Silent Killer.
+      { source: "/products/iron-will", destination: "/products/silent-killer", permanent: true },
     ];
   },
 };

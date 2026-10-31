@@ -60,8 +60,8 @@ insert into public.products (slug, name, tagline, description, gender, concentra
   ('quick-deception', 'Quick Deception', 'Spiced dates, praline and vanilla, irresistibly sweet',
    'Quick Deception is pure indulgence. Cinnamon and nutmeg warm a bright bergamot opening, leading to sticky dates, praline and tuberose, and finally a cocoon of vanilla, tonka, benzoin and myrrh. Sweet, spicy and seriously compelling.',
    'unisex', 'edp', false, true, true),
-  ('iron-will', 'Iron Will', 'Supple leather and cardamom on amber and moss',
-   'Iron Will is quiet strength in a bottle. Cardamom opens onto a heart of soft, supple leather and jasmine, grounded by amber, patchouli and a whisper of oakmoss. Refined, rugged and timeless.',
+  ('silent-killer', 'Silent Killer', 'Supple leather and cardamom on amber and moss',
+   'Silent Killer is quiet strength in a bottle. Cardamom opens onto a heart of soft, supple leather and jasmine, grounded by amber, patchouli and a whisper of oakmoss. Refined, rugged and timeless.',
    'unisex', 'edp', false, true, true)
 on conflict (slug) do update
   set name = excluded.name, tagline = excluded.tagline, description = excluded.description, gender = excluded.gender,
@@ -80,7 +80,7 @@ from (values
   ('rising-shot',     'SG-GD-RSH-100', 185500, 444400),
   ('rogue-alpha',     'SG-GD-RAL-100', 185500, 444400),
   ('quick-deception', 'SG-GD-QDC-100', 185500, 444400),
-  ('iron-will',       'SG-GD-IRW-100', 185500, 444400)
+  ('silent-killer',       'SG-GD-IRW-100', 185500, 444400)
 ) as v(slug, sku, price, mrp)
 join public.products p on p.slug = v.slug
 on conflict (sku) do update set price = excluded.price, mrp = excluded.mrp, label = excluded.label, size_ml = excluded.size_ml;
@@ -89,7 +89,7 @@ on conflict (sku) do update set price = excluded.price, mrp = excluded.mrp, labe
 -- Replace with uploaded photos any time via Admin -> Products -> Images.
 delete from public.product_images
  where product_id in (select id from public.products where slug in
-   ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game','wise-monk','rising-shot','rogue-alpha','quick-deception','iron-will'))
+   ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game','wise-monk','rising-shot','rogue-alpha','quick-deception','silent-killer'))
    and storage_path like '/images/products/%';
 
 insert into public.product_images (product_id, storage_path, alt, sort)
@@ -97,7 +97,7 @@ select p.id, '/images/products/' || p.slug || v.suffix, p.name || v.alt, v.sort
 from public.products p
 cross join (values ('-front.webp', ' eau de parfum 100 ml, front', 0), ('-lifestyle.webp', ' styled with its key ingredients', 1), ('-angle.webp', ' eau de parfum 100 ml, angled', 2), ('-notes.webp', ' fragrance notes: top, heart and base', 3), ('-close.webp', ' cap and label close-up', 4), ('-side.webp', ' eau de parfum 100 ml, side view', 5)) as v(suffix, alt, sort)
 where p.slug in ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game',
-                 'wise-monk','rising-shot','rogue-alpha','quick-deception','iron-will');
+                 'wise-monk','rising-shot','rogue-alpha','quick-deception','silent-killer');
 
 -- Collection membership --------------------------------------------------------------
 insert into public.product_collections (product_id, collection_id, sort)
@@ -106,8 +106,8 @@ from (values
   ('silver', 'quick-storm', 1), ('silver', 'honest-liar', 2), ('silver', 'potion-trail', 3),
   ('silver', 'immortal-romeo', 4), ('silver', 'end-game', 5),
   ('golden', 'wise-monk', 1), ('golden', 'rising-shot', 2), ('golden', 'rogue-alpha', 3),
-  ('golden', 'quick-deception', 4), ('golden', 'iron-will', 5),
-  ('bestsellers', 'quick-deception', 1), ('bestsellers', 'quick-storm', 2), ('bestsellers', 'iron-will', 3), ('bestsellers', 'honest-liar', 4),
+  ('golden', 'quick-deception', 4), ('golden', 'silent-killer', 5),
+  ('bestsellers', 'quick-deception', 1), ('bestsellers', 'quick-storm', 2), ('bestsellers', 'silent-killer', 3), ('bestsellers', 'honest-liar', 4),
   ('new-arrivals', 'wise-monk', 1), ('new-arrivals', 'potion-trail', 2), ('new-arrivals', 'rising-shot', 3), ('new-arrivals', 'immortal-romeo', 4)
 ) as m(collection, product, sort)
 join public.collections c on c.slug = m.collection
@@ -117,7 +117,7 @@ on conflict (product_id, collection_id) do update set sort = excluded.sort;
 -- Fragrance pyramids --------------------------------------------------------------------
 delete from public.product_notes
  where product_id in (select id from public.products where slug in
-   ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game','wise-monk','rising-shot','rogue-alpha','quick-deception','iron-will'));
+   ('quick-storm','honest-liar','potion-trail','immortal-romeo','end-game','wise-monk','rising-shot','rogue-alpha','quick-deception','silent-killer'));
 
 insert into public.product_notes (product_id, note_id, tier)
 select p.id, n.id, x.tier::public.note_tier
@@ -155,8 +155,8 @@ from (values
   ('quick-deception', 'Dates', 'heart'), ('quick-deception', 'Praline', 'heart'), ('quick-deception', 'Tuberose', 'heart'),
   ('quick-deception', 'Vanilla', 'base'), ('quick-deception', 'Tonka Bean', 'base'), ('quick-deception', 'Benzoin', 'base'), ('quick-deception', 'Myrrh', 'base'),
 
-  ('iron-will', 'Cardamom', 'top'), ('iron-will', 'Leather', 'heart'), ('iron-will', 'Jasmine', 'heart'),
-  ('iron-will', 'Amber', 'base'), ('iron-will', 'Patchouli', 'base'), ('iron-will', 'Oakmoss', 'base')
+  ('silent-killer', 'Cardamom', 'top'), ('silent-killer', 'Leather', 'heart'), ('silent-killer', 'Jasmine', 'heart'),
+  ('silent-killer', 'Amber', 'base'), ('silent-killer', 'Patchouli', 'base'), ('silent-killer', 'Oakmoss', 'base')
 ) as x(product, note, tier)
 join public.products p on p.slug = x.product
 join public.notes n on n.name = x.note;
