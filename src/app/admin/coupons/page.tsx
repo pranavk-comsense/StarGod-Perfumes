@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PlusIcon } from "lucide-react";
+import { PencilIcon, PlusIcon } from "lucide-react";
 import { requirePermission } from "@/lib/auth/dal";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatINR } from "@/lib/money";
@@ -29,6 +29,7 @@ export default async function CouponsPage() {
               <th className="px-5 py-3 font-medium">Rules</th>
               <th className="px-5 py-3 font-medium">Used</th>
               <th className="px-5 py-3 font-medium">Status</th>
+              <th className="px-5 py-3 font-medium"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -55,6 +56,11 @@ export default async function CouponsPage() {
                     {c.usage_limit ? ` / ${c.usage_limit}` : ""}
                   </td>
                   <td className="px-5 py-3">{!c.is_active ? <span className="text-muted-foreground">Off</span> : expired ? <span className="text-muted-foreground">Expired</span> : <span className="text-success">Active</span>}</td>
+                  <td className="px-5 py-3 text-right">
+                    <Link href={`/admin/coupons/${c.id}`} className={buttonVariants({ variant: "outline", size: "sm" })} aria-label={`Edit ${c.code}`}>
+                      <PencilIcon /> Edit
+                    </Link>
+                  </td>
                 </tr>
               );
             })}
