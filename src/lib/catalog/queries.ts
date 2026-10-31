@@ -97,7 +97,12 @@ type ListItem = ProductCardData & { collections: string[]; haystack: string };
 
 async function fetchAllCards(): Promise<ListItem[]> {
   const { data, error } = await createPublicClient().from("products").select(CARD_SELECT).order("name");
-  if (error) throw new Error(`Failed to load products: ${error.message}`);
+  if (error) {
+    // Network errors occur when Supabase is unreachable (e.g. during local builds).
+    // Return empty so callers can use a short cacheLife and retry at request time.
+    if (error.message.includes("fetch failed") || error.message.includes("Failed to fetch")) return [];
+    throw new Error(`Failed to load products: ${error.message}`);
+  }
   return (data as unknown as CardRow[]).flatMap((row) => {
     const card = toCard(row);
     if (!card) return [];
@@ -137,9 +142,11 @@ export type ShopFilters = {
 export async function getProducts(filters: ShopFilters = {}): Promise<ProductCardData[]> {
   "use cache";
   cacheTag(CATALOG_TAG);
-  cacheLife("hours");
 
   let items = await fetchAllCards();
+  // Short lifetime when Supabase was unreachable (empty data) → dynamic hole, retries at request time.
+  if (items.length === 0) cacheLife("seconds");
+  else cacheLife("hours");
   const { category, family, sort = "featured", q } = filters;
 
   if (category) items = items.filter((p) => p.collections.includes(category));
@@ -173,9 +180,10 @@ export async function getProducts(filters: ShopFilters = {}): Promise<ProductCar
 export async function getCollectionProducts(slug: string, limit = 8): Promise<ProductCardData[]> {
   "use cache";
   cacheTag(CATALOG_TAG);
-  cacheLife("hours");
 
   const items = await fetchAllCards();
+  if (items.length === 0) cacheLife("seconds");
+  else cacheLife("hours");
   return items
     .filter((p) => p.collections.includes(slug))
     .slice(0, limit)
@@ -265,7 +273,6 @@ export type ReviewHighlight = { id: string; rating: number; title: string | null
 export async function getLatestReviews(limit = 3): Promise<ReviewHighlight[]> {
   "use cache";
   cacheTag(CATALOG_TAG);
-  cacheLife("hours");
 
   const { data } = await createPublicClient()
     .from("public_reviews")
@@ -273,7 +280,10 @@ export async function getLatestReviews(limit = 3): Promise<ReviewHighlight[]> {
     .gte("rating", 4)
     .order("created_at", { ascending: false })
     .limit(limit);
-  return (data ?? []).map((r) => ({
+  const rows = data ?? [];
+  if (rows.length === 0) cacheLife("seconds");
+  else cacheLife("hours");
+  return rows.map((r) => ({
     id: r.id!,
     rating: r.rating!,
     title: r.title,

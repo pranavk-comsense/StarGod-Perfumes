@@ -43,3 +43,6 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# Demo accounts with a public password: run by hand only, never commit
+supabase/prod_demo_accounts.sql

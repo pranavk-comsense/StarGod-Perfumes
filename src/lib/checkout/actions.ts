@@ -9,6 +9,7 @@ import { publicEnv } from "@/lib/env";
 import { rateLimit } from "@/lib/rate-limit";
 import { sendOrderEmail } from "@/lib/email/order-emails";
 import { createOrder, getOrder, isCashfreeConfigured } from "@/lib/payments/cashfree";
+import { releaseExpiredHoldsFor } from "@/lib/payments/holds";
 import { shippingProvider } from "@/lib/shipping/provider";
 
 const schema = z.object({
@@ -74,15 +75,21 @@ export async function placeOrder(input: z.input<typeof schema>): Promise<PlaceOr
   if (delivery?.confirmed && paymentMethod === "cod" && !delivery.codAvailable) return { ok: false, message: `Cash on Delivery isn't available for ${address.pincode}. Please pay online.` };
 
   const admin = createAdminClient();
-  const { data, error } = await admin.rpc("place_order", {
-    p_user_id: user.id,
-    p_checkout_key: checkoutKey,
-    p_items: cart.map((c) => ({ variant_id: c.variant_id, qty: c.qty })),
-    p_address: address,
-    p_payment_method: paymentMethod,
-    p_coupon_code: couponCode || (undefined as unknown as string),
-    p_contact_email: user.email ?? (undefined as unknown as string),
-  });
+  const place = () =>
+    admin.rpc("place_order", {
+      p_user_id: user.id,
+      p_checkout_key: checkoutKey,
+      p_items: cart.map((c) => ({ variant_id: c.variant_id, qty: c.qty })),
+      p_address: address,
+      p_payment_method: paymentMethod,
+      p_coupon_code: couponCode || (undefined as unknown as string),
+      p_contact_email: user.email ?? (undefined as unknown as string),
+    });
+  let { data, error } = await place();
+  // Out of stock: an abandoned payment may still hold it. Release expired holds and retry once.
+  if (error && /INSUFFICIENT_STOCK|OUT_OF_STOCK/.test(error.message) && (await releaseExpiredHoldsFor(cart.map((c) => c.variant_id)))) {
+    ({ data, error } = await place());
+  }
   if (error || !data) {
     if (error && !Object.keys(ERRORS).some((k) => error.message.includes(k)) && !error.message.startsWith("COUPON_INVALID")) {
       console.error("[checkout] place_order", error.message);

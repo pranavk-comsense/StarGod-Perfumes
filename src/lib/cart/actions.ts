@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createClient, getUserId } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { releaseExpiredHoldsFor } from "@/lib/payments/holds";
 import { MAX_LINES, MAX_QTY, type CartItem, type Quote } from "@/lib/cart/types";
 
 const itemsSchema = z
@@ -74,15 +75,26 @@ export async function getQuote(items: CartItem[], couponCode?: string, paymentMe
     return null;
   }
 
-  const { data, error } = await createAdminClient().rpc("quote_cart", {
-    p_user_id: userId as string,
-    p_items: parsed.data.map((i) => ({ variant_id: i.variantId, qty: i.qty })),
-    p_coupon_code: code as string,
-    p_payment_method: paymentMethod,
-  });
+  const quote = () =>
+    createAdminClient().rpc("quote_cart", {
+      p_user_id: userId as string,
+      p_items: parsed.data.map((i) => ({ variant_id: i.variantId, qty: i.qty })),
+      p_coupon_code: code as string,
+      p_payment_method: paymentMethod,
+    });
+  let { data, error } = await quote();
   if (error) {
     console.error("[cart] quote", error.message);
     return null;
+  }
+  // Short on stock: an abandoned payment may still hold it. Release expired holds and re-quote once.
+  const short = (data as unknown as Quote).lines.filter((l) => l.issue === "insufficient_stock").map((l) => l.variant_id);
+  if (short.length && (await releaseExpiredHoldsFor(short))) {
+    ({ data, error } = await quote());
+    if (error) {
+      console.error("[cart] quote", error.message);
+      return null;
+    }
   }
   return data as unknown as Quote;
 }

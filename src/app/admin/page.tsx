@@ -7,6 +7,7 @@ import { formatINR } from "@/lib/money";
 import { daysAgoISO, formatDateTime, istStartOfToday } from "@/lib/orders/format";
 import { OrderStatusBadge } from "@/components/store/status-badge";
 import { AdminPageHeader } from "@/components/admin/page-header";
+import { getLaunchChecks } from "@/lib/admin/launch-checks";
 
 export const metadata = { title: "Dashboard" };
 
@@ -41,10 +42,30 @@ export default async function AdminDashboard() {
   ]);
 
   const revenue30 = (revenue.data ?? []).reduce((sum, o) => sum + (o as { total: number }).total, 0);
+  const failing = can(user.role, "settings.manage") ? (await getLaunchChecks()).filter((c) => !c.ok) : [];
 
   return (
     <>
       <AdminPageHeader title={`Welcome, ${user.fullName?.split(" ")[0] ?? "team"}`} description="Here's what needs your attention today." />
+
+      {failing.length > 0 && (
+        <section aria-labelledby="launch-h" className="mb-6 rounded-md border border-destructive/40 bg-card">
+          <h2 id="launch-h" className="flex items-center gap-2 border-b px-5 py-4 font-sans text-base font-medium">
+            <AlertTriangleIcon className="size-4 text-destructive" /> Launch checks: {failing.length} to fix
+          </h2>
+          <ul className="divide-y text-sm">
+            {failing.map((c) => (
+              <li key={c.label} className="px-5 py-3">
+                <p className="font-medium">
+                  {c.label}
+                  <span className={c.blocker ? "ml-2 text-xs text-destructive" : "ml-2 text-xs text-amber-700"}>{c.blocker ? "Blocks launch" : "Recommended"}</span>
+                </p>
+                <p className="text-muted-foreground">{c.hint}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Stat icon={ReceiptIcon} label="Orders today" value={String(today.count ?? 0)} />

@@ -35,6 +35,7 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
           <p className="font-brand text-2xl font-extrabold text-primary">StarGod</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gold">Premium Perfumes</p>
           <p className="mt-3">{store.legal_name ?? site.legalName}</p>
+          {store.gstin && <p>GSTIN: {store.gstin}</p>}
           <p className="max-w-xs text-neutral-600">{store.address ?? "[Registered address: add in Admin → Settings]"}</p>
         </div>
         <div className="text-right">
@@ -93,6 +94,7 @@ export default async function InvoicePage({ params }: PageProps<"/invoice/[numbe
           <dt>Grand total</dt>
           <dd>{formatINR(order.total)}</dd>
         </div>
+        {order.gst_amount > 0 && <p className="text-right text-[11px] text-neutral-500">Prices include GST of {formatINR(order.gst_amount)}</p>}
       </dl>
 
       <footer className="mt-10 border-t pt-4 text-[11px] text-neutral-500">

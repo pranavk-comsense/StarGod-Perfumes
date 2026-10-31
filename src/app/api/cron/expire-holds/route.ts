@@ -4,12 +4,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { serverEnv } from "@/lib/env";
 import { getRefund, isCashfreeConfigured, mapRefundStatus } from "@/lib/payments/cashfree";
 import { sendOrderEmail } from "@/lib/email/order-emails";
-import { syncOrderPayment } from "@/lib/payments/sync";
+import { releaseExpiredHolds } from "@/lib/payments/holds";
 
 /**
- * Releases stock held by unpaid prepaid orders. Before expiring an order we ask
- * Cashfree whether it was paid (a webhook may have been missed), so a paid
- * order is never cancelled. Scheduled in vercel.json; authenticated with
+ * Releases stock held by unpaid prepaid orders (see releaseExpiredHolds; checkout
+ * also releases holds on demand). Scheduled in vercel.json; authenticated with
  * CRON_SECRET (Vercel sends "Authorization: Bearer <CRON_SECRET>").
  */
 export async function GET(request: NextRequest) {
@@ -21,33 +20,11 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createAdminClient();
-  const graceCutoff = new Date(Date.now() - 2 * 60 * 1000).toISOString();
-  const { data: orders, error } = await supabase
-    .from("orders")
-    .select("id, order_number")
-    .eq("status", "pending_payment")
-    .lt("reserved_until", graceCutoff)
-    .order("reserved_until")
-    .limit(50);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  const result = { checked: orders?.length ?? 0, paid: 0, expired: 0, errors: 0 };
-  for (const o of orders ?? []) {
-    try {
-      if (isCashfreeConfigured()) {
-        const r = await syncOrderPayment(o.order_number, "cron");
-        if (r === "paid" || r === "already_paid" || r === "needs_refund" || r === "amount_mismatch") {
-          result.paid++;
-          continue;
-        }
-        if (r === "pending") continue; // payment in flight; check again next run
-      }
-      const { data: expired } = await supabase.rpc("expire_order_hold", { p_order_id: o.id });
-      if (expired) result.expired++;
-    } catch (e) {
-      result.errors++;
-      console.error("[cron] expire", o.order_number, e);
-    }
+  let result;
+  try {
+    result = await releaseExpiredHolds();
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
   }
   // Refunds: if a refund webhook was missed, poll Cashfree for refunds still pending after 10 minutes.
   const refunds = { checked: 0, settled: 0 };
